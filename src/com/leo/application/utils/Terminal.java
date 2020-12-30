@@ -12,6 +12,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Terminal {
+
+    private Terminal() {
+        throw new IllegalStateException("Terminal class");
+    }
+
     public static void resetCursorPos() {
         System.out.print("\u001b[1000F\u001b[1E");
     }
@@ -23,13 +28,15 @@ public class Terminal {
             p2 = p.start();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Could not execute command: " + command);
+            Thread.currentThread().interrupt();
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(p2.getInputStream()));
         String line = null;
 
         while (true) {
             try {
-                if (!((line = br.readLine()) != null)) {
+                if ((line = br.readLine()) == null) {
                     break;
                 }
             } catch (IOException e) {
