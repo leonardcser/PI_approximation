@@ -5,25 +5,23 @@
  */
 
 
-package com.leo.application.algorithms.sorting.computing;
+package com.leo.application.visualiserapp.algorithms.sorting;
 
 import com.leo.application.utils.Colors;
 
 import java.util.Arrays;
 
 public abstract class Sort implements Runnable {
+    private int sortSleepTime = 21;
     private final Integer[] arr;
     private final Colors[] states;
     private final int start;
     private final int end;
     private boolean finished = true;
-    private volatile boolean paused = false;
+    private boolean paused = false;
+    private int swaps = 0;
+    private boolean exit = false;
 
-    public boolean isExit() {
-        return exit;
-    }
-
-    private volatile boolean exit = false;
 
     protected Sort(Integer[] arr) {
         this.arr = arr;
@@ -32,8 +30,20 @@ public abstract class Sort implements Runnable {
         end = arr.length - 1;
     }
 
-    public void setPaused(boolean paused) {
-        this.paused = paused;
+    public void increaseSpeed() {
+        sortSleepTime = sortSleepTime + 5 < 100 ? sortSleepTime + 5 : sortSleepTime;
+    }
+
+    public void decreaseSpeed() {
+        sortSleepTime = sortSleepTime - 5 > 0 ? sortSleepTime - 5 : sortSleepTime;
+    }
+
+    public boolean isExit() {
+        return exit;
+    }
+
+    protected void setExit(boolean exit) {
+        this.exit = exit;
     }
 
     public boolean isFinished() {
@@ -44,16 +54,8 @@ public abstract class Sort implements Runnable {
         this.finished = finished;
     }
 
-    protected void setExit(boolean exit) {
-        this.exit = exit;
-    }
-
     protected void modifyStatesAt(int index, Colors color) {
         states[index] = color;
-    }
-
-    protected void clearStates() {
-        Arrays.fill(states, null);
     }
 
     protected Integer[] getArr() {
@@ -79,18 +81,35 @@ public abstract class Sort implements Runnable {
 
         if (!exit) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(sortSleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
             int tmp = arr[initIndex];
             arr[initIndex] = arr[destIndex];
             arr[destIndex] = tmp;
+            ++swaps;
         }
-
     }
 
     protected abstract void sort(Integer[] arr, int start, int end);
+
+    protected void reset() {
+        swaps = 0;
+        clearStates();
+        setFinished(true);
+        setPaused(false);
+        setExit(false);
+    }
+
+    protected void clearStates() {
+        Arrays.fill(states, null);
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
 
     public void stop() {
         exit = true;
@@ -103,5 +122,9 @@ public abstract class Sort implements Runnable {
     @Override
     public void run() {
         finished = false;
+    }
+
+    public int getSwaps() {
+        return swaps;
     }
 }

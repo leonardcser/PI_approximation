@@ -4,6 +4,9 @@ public enum Keyboard {
     ENTER(13),
     ESC(27),
     SPACE(32),
+    NUM_1(49),
+    NUM_2(50),
+    NUM_3(51),
     A(97),
     B(98),
     C(99),
@@ -29,7 +32,11 @@ public enum Keyboard {
     W(119),
     X(120),
     Y(121),
-    Z(122);
+    Z(122),
+    UP(156),
+    DOWN(157),
+    RIGHT(158),
+    LEFT(159);
 
     public int keyCode;
 

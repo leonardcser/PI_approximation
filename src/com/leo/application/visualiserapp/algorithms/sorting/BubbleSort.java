@@ -5,7 +5,7 @@
  */
 
 
-package com.leo.application.algorithms.sorting.computing;
+package com.leo.application.visualiserapp.algorithms.sorting;
 
 import com.leo.application.utils.Colors;
 
@@ -35,10 +35,7 @@ public class BubbleSort extends Sort {
     public void run() {
         super.run();
         sort(getArr(), getStart(), getEnd());
-        clearStates();
-        setFinished(true);
-        setPaused(false);
-        setExit(false);
+        reset();
     }
 
     @Override

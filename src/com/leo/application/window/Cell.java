@@ -24,4 +24,13 @@ public class Cell {
     public boolean hasColor() {
         return color != null;
     }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "coordinates=" + coordinates +
+                ", value=" + value +
+                ", color=" + color +
+                '}';
+    }
 }
