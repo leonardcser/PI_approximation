@@ -72,6 +72,9 @@ public class SortingState extends AlgorithmVisualiserState {
             if (!sortingAlgorithm.isFinished()) {
                 sortingAlgorithm.stop();
             }
+            while (!sortingAlgorithm.isFinished()) {
+                Thread.onSpinWait();
+            }
             title.setText(sortingAlgorithm + " (shuffled)");
             generateBars(true);
         } else if (getWindow().getKeyListener().keyIsDown(Keyboard.ENTER)) {
