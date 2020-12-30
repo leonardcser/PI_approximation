@@ -31,11 +31,11 @@ public abstract class Sort implements Runnable {
     }
 
     public void increaseSpeed() {
-        sortSleepTime = sortSleepTime + 5 < 100 ? sortSleepTime + 5 : sortSleepTime;
+        sortSleepTime = sortSleepTime * 2 < 100 ? sortSleepTime * 2 : sortSleepTime;
     }
 
     public void decreaseSpeed() {
-        sortSleepTime = sortSleepTime - 5 > 0 ? sortSleepTime - 5 : sortSleepTime;
+        sortSleepTime = sortSleepTime / 2 > 0 ? sortSleepTime / 2 : sortSleepTime;
     }
 
     public boolean isExit() {

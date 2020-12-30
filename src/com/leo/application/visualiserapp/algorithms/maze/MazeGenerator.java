@@ -22,11 +22,11 @@ public abstract class MazeGenerator implements Runnable {
     }
 
     public void increaseSpeed() {
-        generateSleepTime = generateSleepTime + 10 < 200 ? generateSleepTime + 10 : generateSleepTime;
+        generateSleepTime = generateSleepTime * 2 < 200 ? generateSleepTime * 2 : generateSleepTime;
     }
 
     public void decreaseSpeed() {
-        generateSleepTime = generateSleepTime - 10 > 0 ? generateSleepTime - 10 : generateSleepTime;
+        generateSleepTime = generateSleepTime / 2 > 0 ? generateSleepTime / 2 : generateSleepTime;
     }
 
     protected int getGenerateSleepTime() {

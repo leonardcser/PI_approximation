@@ -1,3 +1,5 @@
+# Project work in progress... 
+> **Current state:** functional
 ## Todo
 - [ ] add java doc
 - [ ] simplify code espacially for Sort and Maze generator abstract classes
