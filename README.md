@@ -1,8 +1,10 @@
 # Project work in progress... 
 > **Current state:** functional
 ## Todo
+- [ ] create README
 - [ ] add java doc
-- [ ] simplify code espacially for Sort and Maze generator abstract classes
+- [ ] simplify code especially for Sort and Maze generator abstract classes
+- [ ] add description page for algorithms
 - [ ] add pathfinding algorithms
 - [ ] add more sorting algorithms
 - [ ] add more maze generation algorithms
