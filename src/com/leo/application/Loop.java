@@ -4,14 +4,12 @@
  *	Time:        15:00
  */
 
-
 package com.leo.application;
 
-import com.leo.application.utils.ApplicationLogger;
+import com.leo.application.utils.LogToFile;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 
 public class Loop implements Runnable, Updatable, Graphics {
-
     public static void main(String[] args) {
         new Loop(new AlgorithmVisualiser(159, 45)).start();
     }
@@ -21,7 +19,6 @@ public class Loop implements Runnable, Updatable, Graphics {
     private long nextStatTime;
     private boolean isRunning = false;
 
-    private final ApplicationLogger logger = new ApplicationLogger();
     private int fpsCounter;
     private int upsCounter;
 
@@ -61,7 +58,7 @@ public class Loop implements Runnable, Updatable, Graphics {
                 Thread.currentThread().interrupt();
             }
 
-//            printStats();
+           printStats();
         }
     }
 
@@ -79,7 +76,7 @@ public class Loop implements Runnable, Updatable, Graphics {
 
     private void printStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            logger.write(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            LogToFile.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             fpsCounter = 0;
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;

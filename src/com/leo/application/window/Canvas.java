@@ -4,18 +4,17 @@
  *	Time:        18:14
  */
 
-
 package com.leo.application.window;
 
 import com.leo.application.Graphics;
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
-import com.leo.application.utils.ApplicationLogger;
 import com.leo.application.utils.Colors;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 public class Canvas implements Updatable, Graphics {
     private static final int RENDER_BUFFER = 5;
     private final int width;
@@ -24,7 +23,6 @@ public class Canvas implements Updatable, Graphics {
     private final Map<Cell, Integer> changeRequests = new HashMap<>();
     private final StringBuilder builder = new StringBuilder();
     private int noChanges;
-    ApplicationLogger logger = new ApplicationLogger();
 
     public Canvas(int width, int height) {
         this.width = width;
@@ -74,7 +72,7 @@ public class Canvas implements Updatable, Graphics {
     }
 
     private void setCell(Cell cell) {
-            canvas[cell.coordinates.y][cell.coordinates.x] = cell;
+        canvas[cell.coordinates.y][cell.coordinates.x] = cell;
     }
 
     public void requestChange(Cell cell, int priority) {

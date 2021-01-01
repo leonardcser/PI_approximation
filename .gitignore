@@ -140,3 +140,5 @@ bin/sounds/glass_006.wav
 bin/sounds/rollover2.wav
 bin/sounds/switch4.wav
 bin/sounds/tick_002.wav
+logs.log
+bin/com/leo/application/utils/LogToFile.class
