@@ -101,7 +101,7 @@ public class MazeState extends AlgorithmVisualiserState {
             for (int rightWallIndex = 0; rightWallIndex < 2; ++rightWallIndex) {
                 getCanvas().requestChange(
                         new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + rightWallIndex), '█',
-                                 Colors.BLACK), 1);
+                                 Colors.DARK_GREY), 1);
             }
         } else {
             for (int leftWallIndex = 0; leftWallIndex < 2; ++leftWallIndex) {
@@ -116,7 +116,7 @@ public class MazeState extends AlgorithmVisualiserState {
             for (int bottomWallIndex = 0; bottomWallIndex < 2; ++bottomWallIndex) {
                 getCanvas().requestChange(
                         new Cell(new DiscreteCoordinates((i * 3) + bottomWallIndex, (j * 3) + 2), '█',
-                                 Colors.BLACK), 1);
+                                 Colors.DARK_GREY), 1);
             }
         } else {
             for (int bottomWallIndex = 0; bottomWallIndex < 2; ++bottomWallIndex) {
@@ -129,7 +129,7 @@ public class MazeState extends AlgorithmVisualiserState {
 
     private void updateCorners(int i, int j) {
         getCanvas()
-                .requestChange(new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + 2), '█', Colors.BLACK),
+                .requestChange(new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + 2), '█', Colors.DARK_GREY),
                                1);
     }
 }
