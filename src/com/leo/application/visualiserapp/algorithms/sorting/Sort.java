@@ -4,10 +4,10 @@
  *	Time:        11:37
  */
 
-
 package com.leo.application.visualiserapp.algorithms.sorting;
 
 import com.leo.application.utils.Colors;
+import com.leo.application.utils.Terminal;
 
 import java.util.Arrays;
 
@@ -83,7 +83,7 @@ public abstract class Sort implements Runnable {
             try {
                 Thread.sleep(sortSleepTime);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Terminal.logErr(e);
                 Thread.currentThread().interrupt();
             }
             int tmp = arr[initIndex];

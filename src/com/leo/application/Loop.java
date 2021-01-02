@@ -6,7 +6,7 @@
 
 package com.leo.application;
 
-import com.leo.application.utils.LogToFile;
+import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 
 public class Loop implements Runnable, Updatable, Graphics {
@@ -32,7 +32,6 @@ public class Loop implements Runnable, Updatable, Graphics {
         thread.start();
     }
 
-
     @Override
     public void run() {
         long start = 0;
@@ -54,11 +53,11 @@ public class Loop implements Runnable, Updatable, Graphics {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Terminal.logErr(e);
                 Thread.currentThread().interrupt();
             }
 
-           printStats();
+            logStats();
         }
     }
 
@@ -74,9 +73,10 @@ public class Loop implements Runnable, Updatable, Graphics {
         ++fpsCounter;
     }
 
-    private void printStats() {
+    private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            LogToFile.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            // Terminal.clearLogs();
+            Terminal.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             fpsCounter = 0;
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;

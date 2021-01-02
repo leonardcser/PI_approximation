@@ -10,6 +10,7 @@ import com.leo.application.Graphics;
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Colors;
+import com.leo.application.utils.Terminal;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -103,7 +104,8 @@ public class Canvas implements Updatable, Graphics {
             noChanges = 0;
         }
         if (noChanges < RENDER_BUFFER) {
-            System.out.print(builder);
+            Terminal.write(builder.toString());
+            Terminal.flush();
             clearCanvas();
         }
     }

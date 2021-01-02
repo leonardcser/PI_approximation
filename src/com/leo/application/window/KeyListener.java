@@ -1,9 +1,8 @@
-/*
- *	Author:      Leonard Cseres
+/**
+ *  Author:      Leonard Cseres
  *	Date:        27.12.20
  *	Time:        19:27
  */
-
 
 package com.leo.application.window;
 
@@ -56,7 +55,7 @@ public class KeyListener implements Runnable {
                 }
                 keyHistory.add(keyDown);
             } catch (IOException e) {
-                e.printStackTrace();
+                Terminal.logErr(e);
             }
             if (keyHistory.size() > 1000) {
                 keyHistory.clear();

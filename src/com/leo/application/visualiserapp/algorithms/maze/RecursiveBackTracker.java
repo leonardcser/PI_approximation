@@ -4,10 +4,10 @@
  *	Time:        02:30
  */
 
-
 package com.leo.application.visualiserapp.algorithms.maze;
 
 import com.leo.application.maths.DiscreteCoordinates;
+import com.leo.application.utils.Terminal;
 
 import java.util.*;
 
@@ -82,7 +82,7 @@ public class RecursiveBackTracker extends MazeGenerator {
         try {
             Thread.sleep(getGenerateSleepTime());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Terminal.logErr(e);
             Thread.currentThread().interrupt();
         }
         while (isPaused() && !isExit()) {

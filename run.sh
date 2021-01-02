@@ -37,11 +37,32 @@ function wait_for_process() {
   fi
 }
 
+# -------------------------------------------- MAIN --------------------------------------------
+
 cd dev/Java/Terminal_AlgorithmVisualiser/
+debug_mode=false
+# check if is debug mode
+if [ "${1}" = "-d" ]; then
+  debug_mode=true
+  osascript &>/dev/null <<EOF
+    tell application "iTerm"
+      create window with default profile
+      tell current session of window 1
+        write text "bash dev/Java/Terminal_AlgorithmVisualiser/logging.sh"
+        set columns to 65
+        set rows to 39
+      end tell
+    end tell
+EOF
+fi
+
+# delete bin dir
 if [ -d "./bin" ]; then
   rm -r ./bin
 fi
+# create bin dir
 mkdir bin
+
 # Compile all java files
 readonly EXPECTED_BIN_SIZE=272
 echo -ne "Compiling files to /bin...\n"
@@ -68,7 +89,22 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
   java -cp bin com.leo.application.Loop
 
   # End script
-  stty raw echo
+  if [ "$debug_mode" = "true" ]; then
+    osascript &>/dev/null <<EOF
+      tell application "iTerm"
+        activate
+        delay 0.05
+        tell window 2 to select
+      end tell
+      delay 0.1
+
+      tell application "System Events" to keystroke "c" using {control down}
+      delay 0.1
+
+      tell application "iTerm" to close window 1
+EOF
+  fi
+  stty -raw echo
   clear
 else
   # Red High intensity color
