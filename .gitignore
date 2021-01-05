@@ -108,3 +108,4 @@ fabric.properties
 bin/
 logs.log
 mousetracker.sh
+.vscode
