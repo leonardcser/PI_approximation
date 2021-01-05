@@ -11,26 +11,65 @@ import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Colors;
 
 public class Cell {
-    public final DiscreteCoordinates coordinates;
-    public final char value;
-    public final Colors color;
+    public final DiscreteCoordinates coordinate;
+    public final Pixel pixel;
+    public final int priority;
 
-    public Cell(DiscreteCoordinates coordinates, char value, Colors color) {
-        this.coordinates = coordinates;
-        this.value = value;
-        this.color = color;
+    public Cell(DiscreteCoordinates coordinate, char character, Colors color, int priority) {
+        this(coordinate, new Pixel(character, color, null), priority);
+    }
+
+    public Cell(DiscreteCoordinates coordinate, Pixel pixel, int priority) {
+        this.coordinate = coordinate;
+        this.pixel = pixel;
+        this.priority = priority;
+    }
+
+    public boolean hasForground() {
+        return pixel.forground != null;
+    }
+    
+    public boolean hasBackground() {
+        return pixel.background != null;
+    }
+
+    public String getForground() {
+        return pixel.forground.value;
+    }
+
+    public String getBackground() {
+        return pixel.background.value.replaceFirst("38", "48");
+    }
+
+    public char getChar() {
+        return pixel.character;
     }
 
     public boolean hasColor() {
-        return color != null;
-    }
+		return hasForground() || hasBackground();
+	}
 
     @Override
     public String toString() {
         return "Cell{" +
-                "coordinates=" + coordinates +
-                ", value=" + value +
-                ", color=" + color +
+                "coordinate=" + coordinate +
+                ", char=" + pixel.character +
+                ", fg=" + pixel.forground +
+                ", bg=" + pixel.background +
                 '}';
     }
+
+    public static class Pixel {
+        private final char character;
+        public final Colors forground;
+        public final Colors background;
+    
+        public Pixel(char character, Colors forground, Colors background) {
+            this.character = character;
+            this.forground = forground;
+            this.background = background;
+        }
+    }
+
+	
 }

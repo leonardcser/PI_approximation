@@ -39,7 +39,7 @@ public class StringArrayGraphics implements Updatable {
     public void update() {
         for (int i = 0; i < array.length; ++i) {
             for (int j = 0; j < array[i].length; ++j) {
-                canvas.requestChange(new Cell(new DiscreteCoordinates(coordinates.x + j, coordinates.y + i), array[i][j], color), priority);
+                canvas.requestCellChange(new Cell(new DiscreteCoordinates(coordinates.x + j, coordinates.y + i), array[i][j], color, priority));
             }
         }
     }

@@ -43,8 +43,8 @@ public class TextGraphics implements Updatable {
     @Override
     public void update() {
         for (int i = 0; i < text.length; ++i) {
-            canvas.requestChange(new Cell(new DiscreteCoordinates(coordinates.x + i, coordinates.y), text[i], color),
-                                 priority);
+            canvas.requestCellChange(new Cell(new DiscreteCoordinates(coordinates.x + i, coordinates.y), text[i], color,
+                                 priority));
         }
     }
 }

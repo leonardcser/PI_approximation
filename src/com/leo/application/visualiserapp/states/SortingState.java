@@ -92,7 +92,7 @@ public class SortingState extends AlgorithmVisualiserState {
         // Update arr
         for (int i = 0; i < barLengths.length; ++i) {
             for (int j = 1; j <= barLengths[i]; ++j) {
-                getCanvas().requestChange(new Cell(new DiscreteCoordinates(i, getCanvas().getHeight() - j), '█', sortingAlgorithm.getStates()[i]), 1);
+                getCanvas().requestCellChange(new Cell(new DiscreteCoordinates(i, getCanvas().getHeight() - j), '█', sortingAlgorithm.getStates()[i], 1));
             }
         }
         if (!sortingAlgorithm.isFinished()) {

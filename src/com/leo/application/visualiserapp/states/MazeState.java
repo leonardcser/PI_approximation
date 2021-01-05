@@ -4,7 +4,6 @@
  *	Time:        02:33
  */
 
-
 package com.leo.application.visualiserapp.states;
 
 import com.leo.application.maths.DiscreteCoordinates;
@@ -13,7 +12,6 @@ import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.visualiserapp.algorithms.maze.MazeCell;
 import com.leo.application.visualiserapp.algorithms.maze.MazeGenerator;
 import com.leo.application.visualiserapp.algorithms.maze.RecursiveBackTracker;
-import com.leo.application.window.Cell;
 import com.leo.application.window.Keyboard;
 
 public class MazeState extends AlgorithmVisualiserState {
@@ -22,9 +20,10 @@ public class MazeState extends AlgorithmVisualiserState {
 
     public MazeState(AlgorithmVisualiser algorithmVisualiser) {
         super(algorithmVisualiser);
-        maze = new MazeCell[getCanvas().getWidth() / 3][getCanvas().getHeight() / 3];
+        maze = new MazeCell[getCanvas().getWidth() / 3][(int) (2 * getCanvas().getHeight() / 3)];
         generateEmptyMaze();
         mazeAlgorithm = new RecursiveBackTracker(maze);
+        getCanvas().setBackground(Colors.LIGHT_GREY);
     }
 
     private void generateEmptyMaze() {
@@ -67,13 +66,8 @@ public class MazeState extends AlgorithmVisualiserState {
         }
         for (int i = 0; i < maze.length; ++i) {
             for (int j = 0; j < maze[i].length; ++j) {
-                Colors color = null;
-                if (maze[i][j].equals(mazeAlgorithm.getHead())) {
-                    color = Colors.RED;
-                } else if (maze[i][j].isVisited()) {
-                    color = null;
-                }
-                updateHead(i, j, color);
+
+                updateHead(i, j);
                 updateRightWalls(i, j);
                 updateBottomWalls(i, j);
                 updateCorners(i, j);
@@ -83,53 +77,39 @@ public class MazeState extends AlgorithmVisualiserState {
         }
     }
 
-
-    private void updateHead(int i, int j, Colors color) {
-        for (int xHeadIndex = 0; xHeadIndex < 2; ++xHeadIndex) {
-            for (int yHeadIndex = 0; yHeadIndex < 2; ++yHeadIndex) {
-                if (maze[i][j].isVisited()) {
-                    getCanvas().requestChange(
-                            new Cell(new DiscreteCoordinates((i * 3) + xHeadIndex, (j * 3) + yHeadIndex), '█',
-                                     color), 1);
-                }
-            }
+    private void updateHead(int i, int j) {
+        Colors color = null;
+        if (maze[i][j].isVisited()) {
+            color = Colors.WHITE;
         }
+        if (maze[i][j].equals(mazeAlgorithm.getHead())) {
+            color = Colors.RED;
+        }
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3), color, 2);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 1), color, 2);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3), color, 2);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3 + 1), color, 2);
     }
 
     private void updateRightWalls(int i, int j) {
+        Colors color = Colors.WHITE;
         if (maze[i][j].hasRightWall()) {
-            for (int rightWallIndex = 0; rightWallIndex < 2; ++rightWallIndex) {
-                getCanvas().requestChange(
-                        new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + rightWallIndex), '█',
-                                 Colors.DARK_GREY), 1);
-            }
-        } else {
-            for (int leftWallIndex = 0; leftWallIndex < 2; ++leftWallIndex) {
-                getCanvas().requestChange(
-                        new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + leftWallIndex), '█', null), 1);
-            }
+            color = Colors.DARK_GREY;
         }
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3), color, 1);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 1), color, 1);
     }
 
     private void updateBottomWalls(int i, int j) {
+        Colors color = Colors.WHITE;
         if (maze[i][j].hasBottomWall()) {
-            for (int bottomWallIndex = 0; bottomWallIndex < 2; ++bottomWallIndex) {
-                getCanvas().requestChange(
-                        new Cell(new DiscreteCoordinates((i * 3) + bottomWallIndex, (j * 3) + 2), '█',
-                                 Colors.DARK_GREY), 1);
-            }
-        } else {
-            for (int bottomWallIndex = 0; bottomWallIndex < 2; ++bottomWallIndex) {
-                getCanvas().requestChange(
-                        new Cell(new DiscreteCoordinates((i * 3) + bottomWallIndex, (j * 3) + 2), '█', null),
-                        1);
-            }
+            color = Colors.DARK_GREY;
         }
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 2), color, 1);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3 + 2), color, 1);
     }
 
     private void updateCorners(int i, int j) {
-        getCanvas()
-                .requestChange(new Cell(new DiscreteCoordinates((i * 3) + 2, (j * 3) + 2), '█', Colors.DARK_GREY),
-                               1);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Colors.DARK_GREY, 1);
     }
 }
