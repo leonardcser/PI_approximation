@@ -21,7 +21,12 @@ public class Loop implements Runnable, Updatable, Graphics {
     private boolean isRunning = false;
 
     private int fpsCounter;
+    private static long staticLastWait;
     private int upsCounter;
+
+    public static boolean isTrottling() {
+        return staticLastWait < 12;
+    }
 
     public Loop(Application application) {
         this.stateManager = application;
@@ -51,6 +56,7 @@ public class Loop implements Runnable, Updatable, Graphics {
             if (wait <= 0) {
                 wait = 5;
             }
+            staticLastWait = wait;
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
@@ -76,7 +82,6 @@ public class Loop implements Runnable, Updatable, Graphics {
 
     private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            // Terminal.clearLogs();
             Terminal.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             fpsCounter = 0;
             upsCounter = 0;

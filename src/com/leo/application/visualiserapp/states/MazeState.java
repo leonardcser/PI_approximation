@@ -35,10 +35,6 @@ public class MazeState extends AlgorithmVisualiserState {
     }
 
     @Override
-    public void render() {
-    }
-
-    @Override
     public void update() {
         if (getWindow().getKeyListener().keyIsDown(Keyboard.ESC)) {
             if (mazeAlgorithm.isStarted()) {
@@ -66,12 +62,10 @@ public class MazeState extends AlgorithmVisualiserState {
         }
         for (int i = 0; i < maze.length; ++i) {
             for (int j = 0; j < maze[i].length; ++j) {
-
                 updateHead(i, j);
                 updateRightWalls(i, j);
                 updateBottomWalls(i, j);
                 updateCorners(i, j);
-
             }
 
         }
@@ -79,12 +73,12 @@ public class MazeState extends AlgorithmVisualiserState {
 
     private void updateHead(int i, int j) {
         Colors color = null;
-        if (maze[i][j].isVisited()) {
-            color = Colors.WHITE;
-        }
         if (maze[i][j].equals(mazeAlgorithm.getHead())) {
             color = Colors.RED;
+        } else if (maze[i][j].isVisited()) {
+            color = Colors.WHITE;
         }
+        
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3), color, 2);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 1), color, 2);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3), color, 2);
@@ -92,21 +86,23 @@ public class MazeState extends AlgorithmVisualiserState {
     }
 
     private void updateRightWalls(int i, int j) {
-        Colors color = Colors.WHITE;
-        if (maze[i][j].hasRightWall()) {
-            color = Colors.DARK_GREY;
-        }
+        Colors color = getWallColor(maze[i][j].hasRightWall());
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3), color, 1);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 1), color, 1);
     }
 
     private void updateBottomWalls(int i, int j) {
-        Colors color = Colors.WHITE;
-        if (maze[i][j].hasBottomWall()) {
-            color = Colors.DARK_GREY;
-        }
+        Colors color = getWallColor(maze[i][j].hasBottomWall());
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 2), color, 1);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3 + 2), color, 1);
+    }
+
+    private Colors getWallColor(boolean hasWall) {
+        Colors color = Colors.WHITE;
+        if (hasWall) {
+            color = Colors.DARK_GREY;
+        }
+        return color;
     }
 
     private void updateCorners(int i, int j) {

@@ -57,10 +57,6 @@ public class SortingState extends AlgorithmVisualiserState {
     }
 
     @Override
-    public void render() {
-    }
-
-    @Override
     public void update() {
         // User input
         if (getWindow().getKeyListener().keyIsDown(Keyboard.ESC)) {

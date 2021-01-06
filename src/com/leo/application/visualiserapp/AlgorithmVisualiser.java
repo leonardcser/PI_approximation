@@ -45,7 +45,6 @@ public class AlgorithmVisualiser extends Application {
         window.render();
         canvas.render();
         assert states.peekFirst() != null;
-        states.peekFirst().render();
     }
 
     @Override

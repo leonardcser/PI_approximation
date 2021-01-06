@@ -6,20 +6,20 @@
 
 package com.leo.application.window;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.leo.application.Graphics;
+import com.leo.application.Loop;
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Colors;
 import com.leo.application.utils.Terminal;
 import com.leo.application.window.Cell.Pixel;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Canvas implements Updatable, Graphics {
     private final int width;
@@ -159,14 +159,29 @@ public class Canvas implements Updatable, Graphics {
             builder.append("\u001b[1E");
         }
 
-        boolean draw = true;
-        if (builder.toString().equals(tmpBuilder.toString())) {
-            draw = false;
-        }
-        if (draw) {
-            Terminal.write(builder.toString());
+        if (!builder.toString().equals(tmpBuilder.toString())) {
+            String deletedChars = "";
+            if (Loop.isTrottling() && builder.length() > 0 && tmpBuilder.length() > 0) {
+                boolean exit = false;
+                int builderIndex = builder.length() - 1;
+                int tmpBuilderIndex = tmpBuilder.length() - 1;
+                while (!exit) {
+                    if (builder.charAt(builderIndex) != tmpBuilder.charAt(tmpBuilderIndex)) {
+                        exit = true;
+                    } else {
+                        --builderIndex;
+                        --tmpBuilderIndex;
+                    }
+                }
+                deletedChars = builder.substring(
+                        builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(), builder.length());
+                builder.delete(builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
+                        builder.length());
+            }
+            Terminal.write(builder.toString() + Colors.RESET.value);
             Terminal.flush();
             clearCanvas();
+            builder.append(deletedChars);
         }
     }
 

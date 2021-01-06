@@ -101,11 +101,6 @@ public class MenuState extends AlgorithmVisualiserState {
     }
 
     @Override
-    public void render() {
-
-    }
-
-    @Override
     public void update() {
 
         // Check for user input

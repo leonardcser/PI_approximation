@@ -8,10 +8,9 @@
 package com.leo.application.states;
 
 import com.leo.application.Application;
-import com.leo.application.Graphics;
 import com.leo.application.Updatable;
 
-public abstract class State implements Updatable, Graphics {
+public abstract class State implements Updatable {
 
     protected Application application;
 

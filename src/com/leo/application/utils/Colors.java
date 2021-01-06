@@ -9,7 +9,7 @@ public enum Colors {
     BOLD("\u001b[1m"),
     BLACK("\u001b[38;5;232m"),
     DARK_GREY("\u001b[38;5;233m"),
-    LIGHT_GREY("\u001b[38;5;246m"),
+    LIGHT_GREY("\u001b[38;5;235m"),
     RESET("\u001b[0m");
 
     public String value;
