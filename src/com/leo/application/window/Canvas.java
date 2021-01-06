@@ -13,20 +13,22 @@ import com.leo.application.utils.Colors;
 import com.leo.application.utils.Terminal;
 import com.leo.application.window.Cell.Pixel;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Canvas implements Updatable, Graphics {
-    private static final int RENDER_BUFFER = 5;
     private final int width;
     private final int height;
     private final Cell[][] canvas;
     private final Map<DiscreteCoordinates, Cell> changeRequests = new HashMap<>();
     private final StringBuilder builder = new StringBuilder();
-    private int noChanges;
     private Colors background = Colors.WHITE;
+    private List<Integer> priorityList = new ArrayList();
 
     public Canvas(int width, int height) {
         this.width = width;
@@ -35,9 +37,6 @@ public class Canvas implements Updatable, Graphics {
         clearCanvas();
     }
 
-    /**
-     * @param background the background to set
-     */
     public void setBackground(Colors background) {
         this.background = background;
     }
@@ -75,32 +74,32 @@ public class Canvas implements Updatable, Graphics {
 
     @Override
     public void update() {
+        Collections.sort(priorityList);
         if (!changeRequests.isEmpty()) {
             do {
-                int lowestPriority = Collections.min(changeRequests.values(),
-                        Comparator.comparingInt(e -> e.priority)).priority;
-
+                int minPriority = priorityList.get(0);
                 for (Map.Entry<DiscreteCoordinates, Cell> request : changeRequests.entrySet()) {
-                    if (request.getValue().priority == lowestPriority) {
+                    if (request.getValue().priority == minPriority) {
                         setCell(request.getValue());
                     }
                 }
-                changeRequests.entrySet().removeIf(e -> e.getValue().priority == lowestPriority);
+                changeRequests.entrySet().removeIf(e -> e.getValue().priority == minPriority);
+                priorityList.remove(0);
             } while (!changeRequests.isEmpty());
         }
-
     }
 
     private void setCell(Cell cell) {
         if (!isOutOfBound(cell)) {
             canvas[cell.coordinate.y][cell.coordinate.x] = cell;
         } else {
-            Terminal.logErr(new IndexOutOfBoundsException(), "Setting cell outside of bounds...");
+            Terminal.logErr("Setting cell outside of bounds: " + cell.toString());
         }
     }
 
     public void requestCellChange(Cell cell) {
         changeRequests.put(new DiscreteCoordinates(cell.coordinate.x, cell.coordinate.y), cell);
+        updatePriorityList(cell.priority);
     }
 
     public void requestPixelChange(DiscreteCoordinates coord, Colors color, int priority) {
@@ -130,6 +129,13 @@ public class Canvas implements Updatable, Graphics {
         } else {
             changeRequests.put(reScaled, new Cell(reScaled, new Pixel('▀', fg, bg), priority));
         }
+        updatePriorityList(priority);
+    }
+
+    private void updatePriorityList(int priority) {
+        if (!priorityList.contains(priority)) {
+            priorityList.add(priority);
+        }
     }
 
     @Override
@@ -153,12 +159,11 @@ public class Canvas implements Updatable, Graphics {
             builder.append("\u001b[1E");
         }
 
+        boolean draw = true;
         if (builder.toString().equals(tmpBuilder.toString())) {
-            noChanges = noChanges < RENDER_BUFFER ? (noChanges + 1) : noChanges;
-        } else {
-            noChanges = 0;
+            draw = false;
         }
-        if (noChanges < RENDER_BUFFER) {
+        if (draw) {
             Terminal.write(builder.toString());
             Terminal.flush();
             clearCanvas();

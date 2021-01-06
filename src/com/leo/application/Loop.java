@@ -11,6 +11,7 @@ import com.leo.application.visualiserapp.AlgorithmVisualiser;
 
 public class Loop implements Runnable, Updatable, Graphics {
     public static void main(String[] args) {
+        Terminal.redirectErr();
         new Loop(new AlgorithmVisualiser(159, 45)).start();
     }
 

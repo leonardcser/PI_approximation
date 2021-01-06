@@ -7,10 +7,11 @@
 package com.leo.application.utils;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class Terminal {
     private static final String FILENAME = "logs.log";
     private static FileHandler fh = null;
 
-    private static BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+    private static PrintWriter printWriter = new PrintWriter(System.out);
 
     private Terminal() {
         throw new IllegalStateException("Utility class");
@@ -45,9 +46,15 @@ public class Terminal {
         logger.log(Level.SEVERE, message, e);
     }
 
+    public static void logErr(String message) {
+        initLogger();
+        logger.log(Level.SEVERE, message);
+    }
+
     public static void logErr(Exception e) {
         logErr(e, "");
     }
+
     private static void initLogger() {
         if (logger == null) {
             logger = Logger.getLogger("MYLOG");
@@ -65,28 +72,20 @@ public class Terminal {
 
     }
 
+    public static void redirectErr() {
+        System.setErr(new LoggerPrintStream(System.err));
+    }
+
     public static void write(String str) {
-        try {
-            bufferedWriter.write(str);
-        } catch (IOException e) {
-            logErr(e);
-        }
+        printWriter.write(str);
     }
 
     public static void flush() {
-        try {
-            bufferedWriter.flush();
-        } catch (IOException e) {
-            logErr(e);
-        }
+        printWriter.flush();
     }
 
     public static void resetCursorPos() {
-        try {
-            bufferedWriter.write("\u001b[1000F\u001b[1E");
-        } catch (IOException e) {
-            logErr(e);
-        }
+        printWriter.write("\u001b[1000F\u001b[1E");
     }
 
     public static void executeCmd(String command) {
@@ -109,8 +108,21 @@ public class Terminal {
             } catch (IOException e) {
                 logErr(e);
             }
-            System.out.println(line);
+            printWriter.write(line);
         }
     }
 
 }
+
+class LoggerPrintStream extends PrintStream {
+
+    public LoggerPrintStream(OutputStream out) {
+        super(out, true);
+    }
+
+    @Override
+    public void print(String s) {
+        Terminal.logErr(s);
+        super.print("");
+    }
+} 
