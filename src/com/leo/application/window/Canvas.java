@@ -110,7 +110,8 @@ public class Canvas implements Updatable, Graphics {
             color = background;
         }
 
-        if (coord.y % 2 == 0) {
+        boolean isEven = coord.y % 2 == 0;
+        if (isEven) {
             fg = color;
         } else {
             bg = color;
@@ -119,7 +120,7 @@ public class Canvas implements Updatable, Graphics {
         DiscreteCoordinates reScaled = new DiscreteCoordinates(coord.x, coord.y / 2);
         if (changeRequests.get(reScaled) != null) {
             Cell oldCell = changeRequests.get(reScaled);
-            if (coord.y % 2 == 0) {
+            if (isEven) {
                 bg = oldCell.pixel.background;
             } else {
                 fg = oldCell.pixel.forground;
@@ -162,27 +163,34 @@ public class Canvas implements Updatable, Graphics {
         if (!builder.toString().equals(tmpBuilder.toString())) {
             String deletedChars = "";
             if (Loop.isTrottling() && builder.length() > 0 && tmpBuilder.length() > 0) {
-                boolean exit = false;
-                int builderIndex = builder.length() - 1;
-                int tmpBuilderIndex = tmpBuilder.length() - 1;
-                while (!exit) {
-                    if (builder.charAt(builderIndex) != tmpBuilder.charAt(tmpBuilderIndex)) {
-                        exit = true;
-                    } else {
-                        --builderIndex;
-                        --tmpBuilderIndex;
-                    }
-                }
-                deletedChars = builder.substring(
-                        builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(), builder.length());
-                builder.delete(builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
-                        builder.length());
+                
+                int builderIndex = getMaxDuplicateIndex(tmpBuilder);
+                int[] bounds = new int[] { builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
+                        builder.length() };
+                        
+                deletedChars = builder.substring(bounds[0], bounds[1]);
+                builder.delete(bounds[0], bounds[1]);
             }
             Terminal.write(builder.toString() + Colors.RESET.value);
             Terminal.flush();
             clearCanvas();
             builder.append(deletedChars);
         }
+    }
+
+    private int getMaxDuplicateIndex(StringBuilder tmpBuilder) {
+        int builderIndex = builder.length() - 1;
+        int tmpBuilderIndex = tmpBuilder.length() - 1;
+        boolean exit = false;
+        while (!exit) {
+            if (builder.charAt(builderIndex) != tmpBuilder.charAt(tmpBuilderIndex)) {
+                exit = true;
+            } else {
+                --builderIndex;
+                --tmpBuilderIndex;
+            }
+        }
+        return builderIndex;
     }
 
 }
