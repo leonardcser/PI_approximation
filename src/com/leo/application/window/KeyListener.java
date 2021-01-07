@@ -6,33 +6,32 @@
 
 package com.leo.application.window;
 
-import com.leo.application.utils.Terminal;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyListener implements Runnable {
-    private final List<Integer> keyHistory = new ArrayList<>();
-    private int keyDown = 0;
-    private boolean isRunning;
-    private boolean isMultiCharKey = false;
+import com.leo.application.utils.Terminal;
 
-    public boolean keyIsDown(Keyboard key) {
-        if (keyDown == key.keyCode) {
-            keyDown = 0;
-            if (keyDown == Keyboard.ESC.keyCode && keyHistory.size() == 1) {
-                keyHistory.clear();
-                new Thread(() -> Terminal.executeCmd("afplay bin/sounds/rollover2.wav")).start();
-                return true;
-            } else if (keyDown == Keyboard.ESC.keyCode) {
-                return false;
-            }
-            keyHistory.clear();
-            new Thread(() -> Terminal.executeCmd("afplay bin/sounds/bong_001.wav")).start();
-            return true;
-        }
-        return false;
+public class KeyListener implements Runnable {
+    private List<Integer> keyFromInput = new ArrayList<>();
+    private boolean isPressed = true;
+    private boolean isRunning;
+    private boolean updated = false;
+
+    public boolean isPressed() {
+        return isPressed;
+    }
+
+    public boolean hasUpdated() {
+        return updated;
+    }
+
+    public void reset() {
+        updated = false;
+        keyFromInput.clear();
+    }
+
+    public Keyboard getKey() {
+        return Keyboard.get(keyFromInput.toArray(new Integer[0]));
     }
 
     public void start() {
@@ -43,22 +42,27 @@ public class KeyListener implements Runnable {
 
     @Override
     public void run() {
+        long start = 0;
+        long elapsed = 0;
         while (isRunning) {
-            try {
-                if (isMultiCharKey) {
-                    keyDown += System.in.read();
-                } else {
-                    keyDown = System.in.read();
+            start = System.nanoTime();    
+            char[] input = System.console().readLine().toCharArray();
+            updated = true;
+            keyFromInput.clear();
+
+            if (input.length == 0) {
+                keyFromInput.add(13);
+            } else {
+                for (char c : input) {
+                    keyFromInput.add((int) c);
                 }
-                if (keyDown == 91 || isMultiCharKey) {
-                    isMultiCharKey = !isMultiCharKey;
-                }
-                keyHistory.add(keyDown);
-            } catch (IOException e) {
-                Terminal.logErr(e);
             }
-            if (keyHistory.size() > 1000) {
-                keyHistory.clear();
+
+            elapsed = (System.nanoTime() - start) / 10000;
+            if (elapsed < 9000 || (elapsed > 49000 && elapsed < 51000)) {
+                isPressed = true;
+            } else {
+                isPressed = false;
             }
         }
     }

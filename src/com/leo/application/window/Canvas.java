@@ -11,10 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.leo.application.Graphics;
-import com.leo.application.Loop;
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Colors;
@@ -28,7 +26,7 @@ public class Canvas implements Updatable, Graphics {
     private final Map<DiscreteCoordinates, Cell> changeRequests = new HashMap<>();
     private final StringBuilder builder = new StringBuilder();
     private Colors background = Colors.WHITE;
-    private List<Integer> priorityList = new ArrayList();
+    private List<Integer> priorityList = new ArrayList<>();
 
     public Canvas(int width, int height) {
         this.width = width;
@@ -141,10 +139,13 @@ public class Canvas implements Updatable, Graphics {
 
     @Override
     public void render() {
-        StringBuilder tmpBuilder = new StringBuilder(builder);
+        String tmpBuilder = builder.toString();
         builder.setLength(0);
         for (Cell[] line : canvas) {
             for (Cell cell : line) {
+                if (!cell.hasForground() || cell.hasBackground()) {
+                    builder.append(Colors.RESET.value);
+                }
                 if (cell.hasForground()) {
                     builder.append(cell.getForground());
                 }
@@ -152,25 +153,15 @@ public class Canvas implements Updatable, Graphics {
                     builder.append(cell.getBackground());
                 }
                 builder.append(cell.getChar());
-                if (cell.hasColor()) {
-                    builder.append(Colors.RESET.value);
-                }
+
             }
             // Carriage return
-            builder.append("\u001b[1E");
+            builder.append("\033[1E");
         }
 
         if (!builder.toString().equals(tmpBuilder.toString())) {
-            String deletedChars = "";
-            if (Loop.isTrottling() && builder.length() > 0 && tmpBuilder.length() > 0) {
-                
-                int builderIndex = getMaxDuplicateIndex(tmpBuilder);
-                int[] bounds = new int[] { builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
-                        builder.length() };
-                        
-                deletedChars = builder.substring(bounds[0], bounds[1]);
-                builder.delete(bounds[0], bounds[1]);
-            }
+            String deletedChars = cleanBuilder(tmpBuilder);
+            
             Terminal.write(builder.toString() + Colors.RESET.value);
             Terminal.flush();
             clearCanvas();
@@ -178,19 +169,28 @@ public class Canvas implements Updatable, Graphics {
         }
     }
 
-    private int getMaxDuplicateIndex(StringBuilder tmpBuilder) {
-        int builderIndex = builder.length() - 1;
-        int tmpBuilderIndex = tmpBuilder.length() - 1;
-        boolean exit = false;
-        while (!exit) {
-            if (builder.charAt(builderIndex) != tmpBuilder.charAt(tmpBuilderIndex)) {
-                exit = true;
-            } else {
-                --builderIndex;
-                --tmpBuilderIndex;
+    private String cleanBuilder(String tmpBuilder) {
+        String deletedChars = "";
+        if (builder.length() > 0 && tmpBuilder.length() > 0) {
+            int builderIndex = builder.length() - 1;
+            int tmpBuilderIndex = tmpBuilder.length() - 1;
+            boolean exit = false;
+            while (!exit) {
+                if (builder.charAt(builderIndex) != tmpBuilder.charAt(tmpBuilderIndex)) {
+                    exit = true;
+                } else {
+                    --builderIndex;
+                    --tmpBuilderIndex;
+                }
             }
+            int[] bounds = new int[] { builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
+                    builder.length() };
+
+            deletedChars = builder.substring(bounds[0], bounds[1]);
+            builder.delete(bounds[0], bounds[1]);
         }
-        return builderIndex;
+
+        return deletedChars;
     }
 
 }

@@ -21,12 +21,20 @@ public abstract class MazeGenerator implements Runnable {
         this.maze = maze;
     }
 
-    public void increaseSpeed() {
-        generateSleepTime = generateSleepTime * 2 < 200 ? generateSleepTime * 2 : generateSleepTime;
+    public boolean decreaseSpeed() {
+        if (generateSleepTime * 2 < 400) {
+            generateSleepTime *= 2;
+            return true;
+        }
+        return false;
     }
 
-    public void decreaseSpeed() {
-        generateSleepTime = generateSleepTime / 2 > 0 ? generateSleepTime / 2 : generateSleepTime;
+    public boolean increaseSpeed() {
+        if (generateSleepTime / 2 > 0) {
+            generateSleepTime /= 2;
+            return true;
+        }
+        return false;
     }
 
     protected int getGenerateSleepTime() {

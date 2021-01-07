@@ -8,9 +8,10 @@
 package com.leo.application.states;
 
 import com.leo.application.Application;
+import com.leo.application.Listener;
 import com.leo.application.Updatable;
 
-public abstract class State implements Updatable {
+public abstract class State implements Updatable, Listener {
 
     protected Application application;
 

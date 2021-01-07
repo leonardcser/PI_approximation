@@ -11,6 +11,7 @@ import com.leo.application.Application;
 import com.leo.application.states.State;
 import com.leo.application.visualiserapp.states.MenuState;
 import com.leo.application.window.Canvas;
+import com.leo.application.window.Keyboard;
 import com.leo.application.window.Window;
 
 import java.util.ArrayDeque;
@@ -41,6 +42,16 @@ public class AlgorithmVisualiser extends Application {
     }
 
     @Override
+    public boolean keyDown(Keyboard key) {
+        return states.peekFirst().keyDown(key);
+    }
+
+    @Override
+    public boolean keyPressed(Keyboard key) {
+        return states.peekFirst().keyPressed(key);
+    }
+
+    @Override
     public void render() {
         window.render();
         canvas.render();
@@ -53,4 +64,5 @@ public class AlgorithmVisualiser extends Application {
         states.peekFirst().update();
         canvas.update();
     }
+
 }

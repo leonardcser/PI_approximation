@@ -7,11 +7,16 @@
 package com.leo.application.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +27,8 @@ public class Terminal {
     private static final String FILENAME = "logs.log";
     private static FileHandler fh = null;
 
-    private static PrintWriter printWriter = new PrintWriter(System.out);
+    private static final PrintWriter printWriter = new PrintWriter(
+            new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), 512));
 
     private Terminal() {
         throw new IllegalStateException("Utility class");
@@ -85,7 +91,12 @@ public class Terminal {
     }
 
     public static void resetCursorPos() {
-        printWriter.write("\u001b[1000F\u001b[1E");
+        write("\033[1000F\033[1E");
+        flush();
+    }
+
+    public static void bip(Audio audio) {
+        new Thread(() -> executeCmd("afplay bin/sounds/" + audio.filename)).start();
     }
 
     public static void executeCmd(String command) {
@@ -108,7 +119,25 @@ public class Terminal {
             } catch (IOException e) {
                 logErr(e);
             }
-            printWriter.write(line);
+            write(line);
+            flush();
+        }
+    }
+
+    public static void writePID() {
+        // Use the engine management bean in java to find out the pid
+        // and to write to a file
+        
+        String pid = ManagementFactory.getRuntimeMXBean().getName();
+        if (pid.indexOf("@") != -1) {
+            pid = pid.substring(0, pid.indexOf("@"));
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("app.pid"))) {
+            writer.write(pid);
+            writer.newLine();
+            writer.flush();
+        } catch (IOException e) {
+            logErr(e);
         }
     }
 
@@ -125,4 +154,4 @@ class LoggerPrintStream extends PrintStream {
         Terminal.logErr(s);
         super.print("");
     }
-} 
+}

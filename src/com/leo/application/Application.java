@@ -7,6 +7,6 @@
 
 package com.leo.application;
 
-public abstract class Application implements Updatable, Graphics {
+public abstract class Application implements Updatable, Graphics, Listener {
 
 }

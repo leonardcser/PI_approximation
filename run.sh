@@ -6,15 +6,31 @@ function update_progress_bar() {
   let _size=$1
   let _expected_size=$2
   let _progress=(${_size} * 100)/${_expected_size}
-  let _done=${_progress}/2
-  let _left=50-$_done
+  let _done=${_progress}*2
+  let _left=(200-${_done})/4
 
-  _fill=$(printf "%${_done}s")
   _empty=$(printf "%${_left}s")
 
   # printf progress bar
+
+  bar=""
+
+  let to_fill=_done
+  for ((i = 0 ; i < to_fill ; i++)); do
+    if [[ $(( i % 4 )) == 0 ]]; then
+      bar+="▎"
+    elif [[ $(( i % 4 )) == 1 ]]; then
+      bar="${bar::-1}▌"
+    elif [[ $(( i % 4 )) == 2 ]]; then
+      bar="${bar::-1}▊"
+    elif [[ $(( i % 4 )) == 3 ]]; then
+      bar="${bar::-1}█"
+    fi
+  done
+
+
   echo -ne "                                                             \r"
-  printf "│${_fill// /█}${_empty// /░} ${_progress}%% │ ${_size}/${_expected_size}Kb         \r"
+  printf "│${bar}${_empty// /░} ${_progress}%% │ ${_size}/${_expected_size}Kb         \r"
 }
 
 declare -i progress=0
@@ -53,6 +69,7 @@ if [ "${1}" = "-d" ]; then
         set rows to 39
       end tell
     end tell
+    tell application "System Events" to keystroke "^" using {command down, shift down}
 EOF
 fi
 
@@ -62,9 +79,11 @@ if [ -d "./bin" ]; then
 fi
 # create bin dir
 mkdir bin
+# Make cursor invisible
+printf '\u001b[?25l'
 
 # Compile all java files
-readonly EXPECTED_BIN_SIZE=272
+readonly EXPECTED_BIN_SIZE=312
 echo -ne "Compiling files to /bin...\n"
 javac -encoding utf8 $(find . -name "*.java") -d bin &
 BACK_PID=$!
@@ -79,11 +98,15 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
   cp -a res/. bin/ &
   BACK_PID=$!
   # wait process to finish
-  readonly EXPECTED_RES_SIZE=352
+  readonly EXPECTED_RES_SIZE=384
   wait_for_process $BACK_PID $EXPECTED_RES_SIZE "./res"
   echo -ne "\rDone!                                                                         \n"
 
+  # save screen
+  tput smcup
+  # Enable raw mode
   stty raw -echo
+
 
   # Launch main Class (Loop.class)
   java -cp bin com.leo.application.Loop
@@ -104,8 +127,13 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
       tell application "iTerm" to close window 1
 EOF
   fi
+  # Make cursor visible
+  printf '\u001b[?25h'
   stty -raw echo
   clear
+  # restore screen
+  tput rmcup
+
 else
   # Red High intensity color
   echo -ne "\n\n\033[0;91m"

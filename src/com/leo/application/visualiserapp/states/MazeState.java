@@ -7,7 +7,9 @@
 package com.leo.application.visualiserapp.states;
 
 import com.leo.application.maths.DiscreteCoordinates;
+import com.leo.application.utils.Audio;
 import com.leo.application.utils.Colors;
+import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.visualiserapp.algorithms.maze.MazeCell;
 import com.leo.application.visualiserapp.algorithms.maze.MazeGenerator;
@@ -35,31 +37,53 @@ public class MazeState extends AlgorithmVisualiserState {
     }
 
     @Override
-    public void update() {
-        if (getWindow().getKeyListener().keyIsDown(Keyboard.ESC)) {
-            if (mazeAlgorithm.isStarted()) {
-                mazeAlgorithm.stop();
-            }
-            getAlgorithmVisualiser().getStates().removeFirst();
-        } else if (getWindow().getKeyListener().keyIsDown(Keyboard.SPACE)) {
-            if (mazeAlgorithm.isStarted()) {
-                mazeAlgorithm.stop();
-            }
-            while (mazeAlgorithm.isExit()) {
-                Thread.onSpinWait();
-            }
-            generateEmptyMaze();
-        } else if (getWindow().getKeyListener().keyIsDown(Keyboard.ENTER)) {
-            if (!mazeAlgorithm.isStarted()) {
-                new Thread(mazeAlgorithm).start();
-            } else {
-                mazeAlgorithm.togglePause();
-            }
-        } else if (getWindow().getKeyListener().keyIsDown(Keyboard.LEFT)) {
-            mazeAlgorithm.increaseSpeed();
-        } else if (getWindow().getKeyListener().keyIsDown(Keyboard.RIGHT)) {
-            mazeAlgorithm.decreaseSpeed();
+    public boolean keyDown(Keyboard key) {
+        switch (key) {
+            case ESC:
+            Terminal.bip(Audio.MENU_CLICK);
+                if (mazeAlgorithm.isStarted()) {
+                    mazeAlgorithm.stop();
+                }
+                getAlgorithmVisualiser().getStates().removeFirst();
+                break;
+            case SPACE:
+            Terminal.bip(Audio.MENU_CLICK);
+                if (mazeAlgorithm.isStarted()) {
+                    mazeAlgorithm.stop();
+                }
+                while (mazeAlgorithm.isExit()) {
+                    Thread.onSpinWait();
+                }
+                generateEmptyMaze();
+                break;
+            case ENTER:
+            Terminal.bip(Audio.MENU_CLICK);
+                if (!mazeAlgorithm.isStarted()) {
+                    new Thread(mazeAlgorithm).start();
+                } else {
+                    mazeAlgorithm.togglePause();
+                }
+                break;
+            case LEFT:
+                if (mazeAlgorithm.decreaseSpeed()) {
+                    Terminal.bip(Audio.MENU_CLICK);
+                }
+                break;
+            case RIGHT:
+
+                if (mazeAlgorithm.increaseSpeed()) {
+                    Terminal.bip(Audio.MENU_CLICK);
+                }
+                break;
+            default:
+                return false;
         }
+        return true;
+    }
+
+    @Override
+    public void update() {
+
         for (int i = 0; i < maze.length; ++i) {
             for (int j = 0; j < maze[i].length; ++j) {
                 updateHead(i, j);
@@ -78,7 +102,7 @@ public class MazeState extends AlgorithmVisualiserState {
         } else if (maze[i][j].isVisited()) {
             color = Colors.WHITE;
         }
-        
+
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3), color, 2);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 1), color, 2);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3), color, 2);

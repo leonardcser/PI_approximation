@@ -1,20 +1,21 @@
 package com.leo.application.utils;
 
 public enum Colors {
-    WHITE("\u001b[38;5;255m"),
-    GREEN("\u001b[38;5;76m"),
-    LIGHT_GREEN("\u001b[38;5;121m"),
-    RED("\u001b[38;5;203m"),
-    DARK_CYAN("\u001b[38;5;73m"),
-    BLUE("\u001b[38;5;32m"),
-    DARK_BLUE("\u001b[38;5;27m"),
-    BOLD("\u001b[1m"),
-    BLACK("\u001b[38;5;232m"),
-    DARK_GREY("\u001b[38;5;233m"),
-    LIGHT_GREY("\u001b[38;5;243m"),
-    RESET("\u001b[0m");
+    WHITE("\033[38;5;255m"),
+    GREEN("\033[38;5;76m"),
+    LIGHT_GREEN("\033[38;5;121m"),
+    RED("\033[38;5;203m"),
+    DARK_CYAN("\033[38;5;73m"),
+    BLUE("\033[38;5;32m"),
+    DARK_BLUE("\033[38;5;27m"),
+    BOLD("\033[1m"),
+    BLACK("\033[38;5;232m"),
+    DARK_GREY("\033[38;5;233m"),
+    LIGHT_GREY("\033[38;5;243m"),
+    RESET("\033[0m"),
+    INVISIBLE("\033[7m");
 
-    public String value;
+    public final String value;
 
     Colors(String color) {
         value = color;

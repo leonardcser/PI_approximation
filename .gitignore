@@ -109,3 +109,4 @@ bin/
 logs.log
 mousetracker.sh
 .vscode
+app.pid

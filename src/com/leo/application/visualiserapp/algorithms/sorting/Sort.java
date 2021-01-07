@@ -30,12 +30,20 @@ public abstract class Sort implements Runnable {
         end = arr.length - 1;
     }
 
-    public void increaseSpeed() {
-        sortSleepTime = sortSleepTime * 2 < 100 ? sortSleepTime * 2 : sortSleepTime;
+    public boolean decreaseSpeed() {
+        if (sortSleepTime * 2 < 200) {
+            sortSleepTime *= 2;
+            return true;
+        }
+        return false;
     }
 
-    public void decreaseSpeed() {
-        sortSleepTime = sortSleepTime / 2 > 0 ? sortSleepTime / 2 : sortSleepTime;
+    public boolean increaseSpeed() {
+        if (sortSleepTime / 2 > 0) {
+            sortSleepTime /= 2;
+            return true;
+        }
+        return false;
     }
 
     public boolean isExit() {

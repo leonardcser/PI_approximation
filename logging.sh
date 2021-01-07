@@ -1,5 +1,14 @@
 #! /bin/bash
 
+exit_script() {
+  if [[ -e "app.pid" ]]; then
+    pid=$(cat app.pid)
+    kill -15 $pid
+  fi
+}
+
+trap exit_script SIGINT SIGTERM
+
 cd dev/Java/Terminal_AlgorithmVisualiser/
 printf '\e[3;1442;0t'
 clear

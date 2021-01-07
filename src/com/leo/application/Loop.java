@@ -8,34 +8,34 @@ package com.leo.application;
 
 import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
+import com.leo.application.window.KeyListener;
+import com.leo.application.window.Keyboard;
 
-public class Loop implements Runnable, Updatable, Graphics {
+public class Loop implements Runnable, Updatable, Graphics, Listener {
     public static void main(String[] args) {
-        Terminal.redirectErr();
         new Loop(new AlgorithmVisualiser(159, 45)).start();
     }
 
     private final Application stateManager;
+    private final KeyListener keyListener = new KeyListener();
     private static final int FPS = 60;
     private long nextStatTime;
     private boolean isRunning = false;
 
     private int fpsCounter;
-    private static long staticLastWait;
     private int upsCounter;
-
-    public static boolean isTrottling() {
-        return staticLastWait < 12;
-    }
 
     public Loop(Application application) {
         this.stateManager = application;
     }
 
     public void start() {
+        Terminal.redirectErr();
+        Terminal.writePID();
         isRunning = true;
         Thread thread = new Thread(this);
         thread.start();
+        keyListener.start();
     }
 
     @Override
@@ -56,7 +56,6 @@ public class Loop implements Runnable, Updatable, Graphics {
             if (wait <= 0) {
                 wait = 5;
             }
-            staticLastWait = wait;
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException e) {
@@ -70,6 +69,16 @@ public class Loop implements Runnable, Updatable, Graphics {
 
     @Override
     public void update() {
+        Keyboard key = keyListener.getKey();
+        if (keyListener.hasUpdated() && key != null) {
+            if (stateManager.keyDown(key)) {
+                keyListener.reset();
+            }
+            if (!keyListener.isPressed() && stateManager.keyPressed(key)) {
+                keyListener.reset();
+            }
+        }
+
         stateManager.update();
         ++upsCounter;
     }
@@ -83,6 +92,8 @@ public class Loop implements Runnable, Updatable, Graphics {
     private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
             Terminal.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            // Set title to fps
+            Terminal.executeCmd("printf '\033]2;" + "Fps:" + fpsCounter + "\u0007'");
             fpsCounter = 0;
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;
