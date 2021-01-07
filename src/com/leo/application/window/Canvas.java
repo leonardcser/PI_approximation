@@ -143,7 +143,7 @@ public class Canvas implements Updatable, Graphics {
         builder.setLength(0);
         for (Cell[] line : canvas) {
             for (Cell cell : line) {
-                if (!cell.hasForground() || cell.hasBackground()) {
+                if (!cell.hasForground() || !cell.hasBackground()) {
                     builder.append(Colors.RESET.value);
                 }
                 if (cell.hasForground()) {

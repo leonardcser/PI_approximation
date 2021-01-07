@@ -9,8 +9,6 @@ package com.leo.application.window;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leo.application.utils.Terminal;
-
 public class KeyListener implements Runnable {
     private List<Integer> keyFromInput = new ArrayList<>();
     private boolean isPressed = true;
@@ -45,7 +43,7 @@ public class KeyListener implements Runnable {
         long start = 0;
         long elapsed = 0;
         while (isRunning) {
-            start = System.nanoTime();    
+            start = System.nanoTime();
             char[] input = System.console().readLine().toCharArray();
             updated = true;
             keyFromInput.clear();
