@@ -107,7 +107,6 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     @Override
     public void end() {
-        application.end();
         Terminal.resetCursorPos();
         System.exit(0);
     }
