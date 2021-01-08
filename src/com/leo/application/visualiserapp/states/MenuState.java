@@ -11,7 +11,7 @@ import com.leo.application.graphics.TextGraphics;
 import com.leo.application.io.AsciiFileReader;
 import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Audio;
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.visualiserapp.algorithms.sorting.SortingAlgorithm;
@@ -43,7 +43,7 @@ public class MenuState extends AlgorithmVisualiserState {
         String[] titleArray = new AsciiFileReader("algorithmvisualiser/menu_title.txt").toArray();
         mainTitle = new StringArrayGraphics(getCanvas(),
                 new DiscreteCoordinates((getCanvas().getWidth() / 2) - (titleArray[0].length() / 2), 0), titleArray,
-                Colors.BLUE);
+                Color.BLUE);
         // Menu Titles
         for (int i = 0; i < menuTitles.length; ++i) {
             menuTitles[i] = new TextGraphics(getCanvas(), new DiscreteCoordinates(24 + (i * 40), 18),
@@ -171,7 +171,7 @@ public class MenuState extends AlgorithmVisualiserState {
     private void updateMenuOptions(TextGraphics[] options, int columnPosition) {
         for (int i = 0; i < options.length; ++i) {
             if (i == currentSelection && currentColumn == columnPosition) {
-                options[i].setColor(Colors.BOLD);
+                options[i].setColor(Color.BOLD);
             } else {
                 options[i].setColor(null);
             }

@@ -6,6 +6,7 @@
 
 package com.leo.application;
 
+import com.leo.application.snakegame.SnakeGame;
 import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.window.KeyListener;
@@ -13,7 +14,8 @@ import com.leo.application.window.Keyboard;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
-        new Loop(new AlgorithmVisualiser(159, 45)).start();
+        // new Loop(new AlgorithmVisualiser(159, 45)).start();
+        new Loop(new SnakeGame(80, 40)).start();
     }
 
     private final Application application;
@@ -44,7 +46,7 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
         long elapsed = 0;
         long wait = 0;
 
-        while (isRunning) {
+        while (isRunning && !application.isExitRequested()) {
             start = System.nanoTime();
             update();
             render();
@@ -64,10 +66,8 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
             }
 
             logStats();
-            if (application.isExitRequested()) {
-                isRunning = false;
-            }
         }
+        isRunning = false;
         end();
     }
 

@@ -8,7 +8,7 @@ package com.leo.application.visualiserapp.states;
 
 import com.leo.application.maths.DiscreteCoordinates;
 import com.leo.application.utils.Audio;
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.visualiserapp.algorithms.maze.MazeCell;
@@ -25,7 +25,6 @@ public class MazeState extends AlgorithmVisualiserState {
         maze = new MazeCell[getCanvas().getWidth() / 3][(int) (2 * getCanvas().getHeight() / 3)];
         generateEmptyMaze();
         mazeAlgorithm = new RecursiveBackTracker(maze);
-        getCanvas().setBackground(Colors.LIGHT_GREY);
     }
 
     private void generateEmptyMaze() {
@@ -95,11 +94,11 @@ public class MazeState extends AlgorithmVisualiserState {
     }
 
     private void updateHead(int i, int j) {
-        Colors color = null;
+        Color color = null;
         if (maze[i][j].equals(mazeAlgorithm.getHead())) {
-            color = Colors.RED;
+            color = Color.RED;
         } else if (maze[i][j].isVisited()) {
-            color = Colors.WHITE;
+            color = Color.WHITE;
         }
 
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3), color, 2);
@@ -109,27 +108,27 @@ public class MazeState extends AlgorithmVisualiserState {
     }
 
     private void updateRightWalls(int i, int j) {
-        Colors color = getWallColor(maze[i][j].hasRightWall());
+        Color color = getWallColor(maze[i][j].hasRightWall());
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3), color, 1);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 1), color, 1);
     }
 
     private void updateBottomWalls(int i, int j) {
-        Colors color = getWallColor(maze[i][j].hasBottomWall());
+        Color color = getWallColor(maze[i][j].hasBottomWall());
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3, j * 3 + 2), color, 1);
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3 + 2), color, 1);
     }
 
-    private Colors getWallColor(boolean hasWall) {
-        Colors color = Colors.WHITE;
+    private Color getWallColor(boolean hasWall) {
+        Color color = Color.WHITE;
         if (hasWall) {
-            color = Colors.DARK_GREY;
+            color = Color.DARK_GREY;
         }
         return color;
     }
 
     private void updateCorners(int i, int j) {
-        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Colors.DARK_GREY, 1);
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Color.DARK_GREY, 1);
     }
 
     @Override

@@ -9,7 +9,7 @@ package com.leo.application.graphics;
 
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 import com.leo.application.window.Canvas;
 import com.leo.application.window.Cell;
 
@@ -18,14 +18,14 @@ public class StringArrayGraphics implements Updatable {
     private final Canvas canvas;
     private final DiscreteCoordinates coordinates;
     private char[][] array;
-    private final Colors color;
+    private final Color color;
 
 
     public StringArrayGraphics(Canvas canvas, DiscreteCoordinates coordinates, String[] array) {
         this(canvas, coordinates, array, null);
     }
 
-    public StringArrayGraphics(Canvas canvas, DiscreteCoordinates coordinates, String[] array, Colors color) {
+    public StringArrayGraphics(Canvas canvas, DiscreteCoordinates coordinates, String[] array, Color color) {
         this.canvas = canvas;
         this.coordinates = coordinates;
         this.array = new char[array.length][];

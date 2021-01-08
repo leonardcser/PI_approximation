@@ -15,7 +15,7 @@ import java.util.Map;
 import com.leo.application.Graphics;
 import com.leo.application.Updatable;
 import com.leo.application.maths.DiscreteCoordinates;
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 import com.leo.application.utils.Terminal;
 import com.leo.application.window.Cell.Pixel;
 
@@ -25,7 +25,7 @@ public class Canvas implements Updatable, Graphics {
     private final Cell[][] canvas;
     private final Map<DiscreteCoordinates, Cell> changeRequests = new HashMap<>();
     private final StringBuilder builder = new StringBuilder();
-    private Colors background = Colors.WHITE;
+    private Color background = null;
     private List<Integer> priorityList = new ArrayList<>();
 
     public Canvas(int width, int height) {
@@ -35,7 +35,7 @@ public class Canvas implements Updatable, Graphics {
         clearCanvas();
     }
 
-    public void setBackground(Colors background) {
+    public void setBackground(Color background) {
         this.background = background;
     }
 
@@ -70,6 +70,10 @@ public class Canvas implements Updatable, Graphics {
         return (y < 0) || (x < 0) || (y > height - 1) || (x > width - 1);
     }
 
+    public boolean isOutOfBound(int x, int y) {
+        return (y < 0) || (x < 0) || (y > height - 1) || (x > width - 1);
+    }
+
     @Override
     public void update() {
         Collections.sort(priorityList);
@@ -100,33 +104,49 @@ public class Canvas implements Updatable, Graphics {
         updatePriorityList(cell.priority);
     }
 
-    public void requestPixelChange(DiscreteCoordinates coord, Colors color, int priority) {
-        Colors fg = background;
-        Colors bg = background;
-        if (color == null) {
-            priority = 0;
-            color = background;
-        }
+    public void requestPixelChange(DiscreteCoordinates coord, Color color, int priority) {
+        Color fg = background;
+        Color bg = background;
 
+        char pixelType;
         boolean isEven = coord.y % 2 == 0;
-        if (isEven) {
-            fg = color;
-        } else {
-            bg = color;
-        }
 
         DiscreteCoordinates reScaled = new DiscreteCoordinates(coord.x, coord.y / 2);
         if (changeRequests.get(reScaled) != null) {
             Cell oldCell = changeRequests.get(reScaled);
-            if (isEven) {
-                bg = oldCell.pixel.background;
-            } else {
-                fg = oldCell.pixel.forground;
-            }
-            changeRequests.replace(reScaled, new Cell(reScaled, new Pixel('▀', fg, bg), priority));
+            if (oldCell.priority <= priority) {
+                if (color == null) {
+                    fg = oldCell.pixel.forground;
+                    bg = color; // bg = null
+                    if (isEven) {
+                        pixelType = '▄';
+                    } else {
+                        pixelType = '▀';
 
-        } else {
-            changeRequests.put(reScaled, new Cell(reScaled, new Pixel('▀', fg, bg), priority));
+                    }
+                } else if (isEven) {
+                    pixelType = '▀';
+                    fg = color;
+                    bg = oldCell.pixel.forground;
+                } else {
+                    pixelType = '▀';
+                    fg = oldCell.pixel.forground;
+                    bg = color;
+                }
+                changeRequests.replace(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), priority));
+            }
+        } else if (color != null) {
+            fg = color;
+            if (isEven) {
+                // Top pixel
+                pixelType = '▀';
+                // bg = background
+            } else {
+                // Bottom pixel
+                pixelType = '▄';
+                // bg = background
+            }
+            changeRequests.put(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), priority));
         }
         updatePriorityList(priority);
     }
@@ -144,7 +164,7 @@ public class Canvas implements Updatable, Graphics {
         for (Cell[] line : canvas) {
             for (Cell cell : line) {
                 if (!cell.hasForground() || !cell.hasBackground()) {
-                    builder.append(Colors.RESET.value);
+                    builder.append(Color.RESET.value);
                 }
                 if (cell.hasForground()) {
                     builder.append(cell.getForground());
@@ -162,7 +182,7 @@ public class Canvas implements Updatable, Graphics {
         if (!builder.toString().equals(tmpBuilder.toString())) {
             String deletedChars = cleanBuilder(tmpBuilder);
 
-            Terminal.write(builder.toString() + Colors.RESET.value);
+            Terminal.write(builder.toString() + Color.RESET.value);
             Terminal.flush();
             clearCanvas();
             builder.append(deletedChars);

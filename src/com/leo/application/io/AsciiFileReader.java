@@ -1,3 +1,10 @@
+/**
+ *  Author:     Leonard Cseres
+ *  Date:       Fri Jan 08 2021
+ *  Time:       15:27:23
+ */
+
+ 
 package com.leo.application.io;
 
 import java.io.BufferedReader;

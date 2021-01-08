@@ -7,7 +7,7 @@
 
 package com.leo.application.visualiserapp.algorithms.sorting;
 
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 
 public class BubbleSort extends Sort {
 
@@ -24,7 +24,7 @@ public class BubbleSort extends Sort {
                 if (arr[i] > arr[i + 1]) {
                     swap(arr, i + 1, i);
                     clearStates();
-                    modifyStatesAt(i + 1, Colors.RED);
+                    modifyStatesAt(i + 1, Color.RED);
                     exit = false;
                 }
             }

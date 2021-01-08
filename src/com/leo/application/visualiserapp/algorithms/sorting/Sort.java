@@ -6,7 +6,7 @@
 
 package com.leo.application.visualiserapp.algorithms.sorting;
 
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 import com.leo.application.utils.Terminal;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 public abstract class Sort implements Runnable {
     private int sortSleepTime = 21;
     private final Integer[] arr;
-    private final Colors[] states;
+    private final Color[] states;
     private final int start;
     private final int end;
     private boolean finished = true;
@@ -25,7 +25,7 @@ public abstract class Sort implements Runnable {
 
     protected Sort(Integer[] arr) {
         this.arr = arr;
-        states = new Colors[arr.length];
+        states = new Color[arr.length];
         start = 0;
         end = arr.length - 1;
     }
@@ -62,7 +62,7 @@ public abstract class Sort implements Runnable {
         this.finished = finished;
     }
 
-    protected void modifyStatesAt(int index, Colors color) {
+    protected void modifyStatesAt(int index, Color color) {
         states[index] = color;
     }
 
@@ -70,7 +70,7 @@ public abstract class Sort implements Runnable {
         return arr;
     }
 
-    public Colors[] getStates() {
+    public Color[] getStates() {
         return states;
     }
 

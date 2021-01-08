@@ -7,7 +7,7 @@
 
 package com.leo.application.visualiserapp.algorithms.sorting;
 
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 
 public class QuickSort extends Sort {
 
@@ -37,17 +37,17 @@ public class QuickSort extends Sort {
 
     private int partition(Integer[] arr, int start, int end) {
         for (int i = start; i <= end; ++i) {
-            modifyStatesAt(i, Colors.DARK_CYAN);
+            modifyStatesAt(i, Color.DARK_CYAN);
         }
         int pivotIndex = start;
         int pivotValue = arr[end];
-        modifyStatesAt(pivotIndex, Colors.RED);
+        modifyStatesAt(pivotIndex, Color.RED);
         for (int i = start; i < end; ++i) {
             if (arr[i] < pivotValue) {
                 swap(arr, i, pivotIndex);
                 modifyStatesAt(pivotIndex, null);
                 ++pivotIndex;
-                modifyStatesAt(pivotIndex, Colors.RED);
+                modifyStatesAt(pivotIndex, Color.RED);
             }
         }
         swap(arr, pivotIndex, end);

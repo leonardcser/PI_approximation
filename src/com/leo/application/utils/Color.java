@@ -1,6 +1,6 @@
 package com.leo.application.utils;
 
-public enum Colors {
+public enum Color {
     WHITE("\033[38;5;255m"),
     GREEN("\033[38;5;76m"),
     LIGHT_GREEN("\033[38;5;121m"),
@@ -17,7 +17,7 @@ public enum Colors {
 
     public final String value;
 
-    Colors(String color) {
+    Color(String color) {
         value = color;
     }
 }

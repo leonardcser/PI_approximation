@@ -12,7 +12,7 @@ import java.util.List;
 public class KeyListener implements Runnable {
     private List<Integer> keyFromInput = new ArrayList<>();
     private boolean isPressed = true;
-    private boolean isRunning;
+    private boolean isRunning = false;
     private boolean updated = false;
 
     public boolean isPressed() {

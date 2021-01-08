@@ -8,14 +8,14 @@
 package com.leo.application.window;
 
 import com.leo.application.maths.DiscreteCoordinates;
-import com.leo.application.utils.Colors;
+import com.leo.application.utils.Color;
 
 public class Cell {
     public final DiscreteCoordinates coordinate;
     public final Pixel pixel;
     public final int priority;
 
-    public Cell(DiscreteCoordinates coordinate, char character, Colors color, int priority) {
+    public Cell(DiscreteCoordinates coordinate, char character, Color color, int priority) {
         this(coordinate, new Pixel(character, color, null), priority);
     }
 
@@ -61,10 +61,10 @@ public class Cell {
 
     public static class Pixel {
         private final char character;
-        public final Colors forground;
-        public final Colors background;
+        public final Color forground;
+        public final Color background;
     
-        public Pixel(char character, Colors forground, Colors background) {
+        public Pixel(char character, Color forground, Color background) {
             this.character = character;
             this.forground = forground;
             this.background = background;
