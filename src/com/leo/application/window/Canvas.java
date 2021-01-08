@@ -161,7 +161,7 @@ public class Canvas implements Updatable, Graphics {
 
         if (!builder.toString().equals(tmpBuilder.toString())) {
             String deletedChars = cleanBuilder(tmpBuilder);
-            
+
             Terminal.write(builder.toString() + Colors.RESET.value);
             Terminal.flush();
             clearCanvas();

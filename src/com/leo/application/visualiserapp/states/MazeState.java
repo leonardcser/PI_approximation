@@ -40,14 +40,14 @@ public class MazeState extends AlgorithmVisualiserState {
     public boolean keyDown(Keyboard key) {
         switch (key) {
             case ESC:
-            Terminal.bip(Audio.MENU_CLICK);
+                Terminal.bip(Audio.MENU_CLICK);
                 if (mazeAlgorithm.isStarted()) {
                     mazeAlgorithm.stop();
                 }
-                getAlgorithmVisualiser().getStates().removeFirst();
+                getAlgorithmVisualiser().removeFirstState();
                 break;
             case SPACE:
-            Terminal.bip(Audio.MENU_CLICK);
+                Terminal.bip(Audio.MENU_CLICK);
                 if (mazeAlgorithm.isStarted()) {
                     mazeAlgorithm.stop();
                 }
@@ -57,7 +57,7 @@ public class MazeState extends AlgorithmVisualiserState {
                 generateEmptyMaze();
                 break;
             case ENTER:
-            Terminal.bip(Audio.MENU_CLICK);
+                Terminal.bip(Audio.MENU_CLICK);
                 if (!mazeAlgorithm.isStarted()) {
                     new Thread(mazeAlgorithm).start();
                 } else {
@@ -83,7 +83,6 @@ public class MazeState extends AlgorithmVisualiserState {
 
     @Override
     public void update() {
-
         for (int i = 0; i < maze.length; ++i) {
             for (int j = 0; j < maze[i].length; ++j) {
                 updateHead(i, j);
@@ -131,5 +130,10 @@ public class MazeState extends AlgorithmVisualiserState {
 
     private void updateCorners(int i, int j) {
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Colors.DARK_GREY, 1);
+    }
+
+    @Override
+    public void end() {
+        // Empty on purpose, do nothing
     }
 }

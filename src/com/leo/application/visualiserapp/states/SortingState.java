@@ -18,9 +18,7 @@ import com.leo.application.visualiserapp.algorithms.sorting.SortingAlgorithm;
 import com.leo.application.window.Cell;
 import com.leo.application.window.Keyboard;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -68,7 +66,7 @@ public class SortingState extends AlgorithmVisualiserState {
                 if (!sortingAlgorithm.isFinished()) {
                     sortingAlgorithm.stop();
                 }
-                getAlgorithmVisualiser().getStates().removeFirst();
+                getAlgorithmVisualiser().removeFirstState();
                 break;
             case SPACE:
                 Terminal.bip(Audio.MENU_CLICK);
@@ -122,5 +120,10 @@ public class SortingState extends AlgorithmVisualiserState {
         }
         title.update();
 
+    }
+
+    @Override
+    public void end() {
+        // Empty on purpose, do nothing
     }
 }

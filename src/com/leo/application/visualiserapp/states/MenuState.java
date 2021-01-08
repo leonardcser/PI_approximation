@@ -86,8 +86,7 @@ public class MenuState extends AlgorithmVisualiserState {
             case ESC:
                 // TODO: find better way of closing app
                 Terminal.bip(Audio.MENU_CLICK);
-                Terminal.resetCursorPos();
-                System.exit(0);
+                super.getAlgorithmVisualiser().end();
                 break;
             case DOWN:
                 int max = 0;
@@ -114,16 +113,16 @@ public class MenuState extends AlgorithmVisualiserState {
                 Terminal.bip(Audio.MENU_CLICK);
                 if (currentColumn == 0) {
                     if (currentSelection == 0) {
-                        getAlgorithmVisualiser().getStates()
-                                .push(new SortingState(getAlgorithmVisualiser(), SortingAlgorithm.BUBBLE_SORT));
+                        getAlgorithmVisualiser()
+                                .pushState(new SortingState(getAlgorithmVisualiser(), SortingAlgorithm.BUBBLE_SORT));
 
                     } else if (currentSelection == 1) {
-                        getAlgorithmVisualiser().getStates()
-                                .push(new SortingState(getAlgorithmVisualiser(), SortingAlgorithm.QUICK_SORT));
+                        getAlgorithmVisualiser()
+                                .pushState(new SortingState(getAlgorithmVisualiser(), SortingAlgorithm.QUICK_SORT));
 
                     }
                 } else if (currentColumn == 1) {
-                    getAlgorithmVisualiser().getStates().push(new MazeState(getAlgorithmVisualiser()));
+                    getAlgorithmVisualiser().pushState(new MazeState(getAlgorithmVisualiser()));
                 }
                 break;
             default:
@@ -178,5 +177,10 @@ public class MenuState extends AlgorithmVisualiserState {
             }
             options[i].update();
         }
+    }
+
+    @Override
+    public void end() {
+        // Empty on purpose, do nothing
     }
 }

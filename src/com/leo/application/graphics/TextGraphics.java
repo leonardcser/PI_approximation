@@ -47,4 +47,5 @@ public class TextGraphics implements Updatable {
                                  priority));
         }
     }
+
 }

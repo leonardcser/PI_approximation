@@ -11,12 +11,12 @@ import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.window.KeyListener;
 import com.leo.application.window.Keyboard;
 
-public class Loop implements Runnable, Updatable, Graphics, Listener {
+public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
         new Loop(new AlgorithmVisualiser(159, 45)).start();
     }
 
-    private final Application stateManager;
+    private final Application application;
     private final KeyListener keyListener = new KeyListener();
     private static final int FPS = 60;
     private long nextStatTime;
@@ -26,7 +26,7 @@ public class Loop implements Runnable, Updatable, Graphics, Listener {
     private int upsCounter;
 
     public Loop(Application application) {
-        this.stateManager = application;
+        this.application = application;
     }
 
     public void start() {
@@ -64,28 +64,33 @@ public class Loop implements Runnable, Updatable, Graphics, Listener {
             }
 
             logStats();
+            if (application.isExitRequested()) {
+                isRunning = false;
+            }
         }
+        end();
     }
 
     @Override
     public void update() {
+        // Check for user input
         Keyboard key = keyListener.getKey();
         if (keyListener.hasUpdated() && key != null) {
-            if (stateManager.keyDown(key)) {
+            if (application.keyDown(key)) {
                 keyListener.reset();
             }
-            if (!keyListener.isPressed() && stateManager.keyPressed(key)) {
+            if (!keyListener.isPressed() && application.keyPressed(key)) {
                 keyListener.reset();
             }
         }
 
-        stateManager.update();
+        application.update();
         ++upsCounter;
     }
 
     @Override
     public void render() {
-        stateManager.render();
+        application.render();
         ++fpsCounter;
     }
 
@@ -98,5 +103,12 @@ public class Loop implements Runnable, Updatable, Graphics, Listener {
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;
         }
+    }
+
+    @Override
+    public void end() {
+        application.end();
+        Terminal.resetCursorPos();
+        System.exit(0);
     }
 }
