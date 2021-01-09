@@ -15,7 +15,7 @@ import com.leo.application.window.Keyboard;
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
         // new Loop(new AlgorithmVisualiser(159, 45)).start();
-        new Loop(new SnakeGame(80, 40)).start();
+        new Loop(new SnakeGame(40, 24)).start();
     }
 
     private final Application application;

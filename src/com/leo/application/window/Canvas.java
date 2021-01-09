@@ -114,25 +114,26 @@ public class Canvas implements Updatable, Graphics {
         DiscreteCoordinates reScaled = new DiscreteCoordinates(coord.x, coord.y / 2);
         if (changeRequests.get(reScaled) != null) {
             Cell oldCell = changeRequests.get(reScaled);
-            if (oldCell.priority <= priority) {
-                if (color == null) {
-                    fg = oldCell.pixel.forground;
-                    bg = color; // bg = null
-                    if (isEven) {
-                        pixelType = '▄';
-                    } else {
-                        pixelType = '▀';
-
-                    }
-                } else if (isEven) {
-                    pixelType = '▀';
-                    fg = color;
-                    bg = oldCell.pixel.forground;
+            if (color == null) {
+                fg = oldCell.pixel.forground;
+                bg = color; // bg = null
+                if (isEven) {
+                    pixelType = '▄';
                 } else {
                     pixelType = '▀';
-                    fg = oldCell.pixel.forground;
-                    bg = color;
+
                 }
+            } else if (isEven) {
+                pixelType = '▀';
+                fg = color;
+                bg = oldCell.pixel.forground;
+            } else {
+                pixelType = '▀';
+                fg = oldCell.pixel.forground;
+                bg = color;
+            }
+            if (oldCell.priority <= priority || (bg == color && oldCell.pixel.background == null)
+                    || (fg == color && oldCell.pixel.forground == null)) {
                 changeRequests.replace(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), priority));
             }
         } else if (color != null) {

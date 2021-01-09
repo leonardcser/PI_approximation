@@ -57,6 +57,10 @@ public final class DiscreteCoordinates {
         return new DiscreteCoordinates(x, y-1);
     }
 
+    public DiscreteCoordinates opposite(){
+        return new DiscreteCoordinates(x*(-1), y*(-1));
+    }
+
     /**
      * Return the neighbours coordinates
      * @return (float): the neighbours

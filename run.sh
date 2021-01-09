@@ -83,7 +83,7 @@ mkdir bin
 printf '\u001b[?25l'
 
 # Compile all java files
-readonly EXPECTED_BIN_SIZE=312
+readonly EXPECTED_BIN_SIZE=384
 echo -ne "Compiling files to /bin...\n"
 javac -encoding utf8 $(find . -name "*.java") -d bin &
 BACK_PID=$!
