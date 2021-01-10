@@ -8,11 +8,12 @@ package com.leo.application.snakegame;
 
 import com.leo.application.Application;
 import com.leo.application.snakegame.states.PlayState;
+import com.leo.application.window.Window;
 
 public class SnakeGame extends Application {
 
-    public SnakeGame(int width, int height) {
-        super(width, height);
+    public SnakeGame(Window window) {
+        super(window);
         pushState(new PlayState(this));
     }
 

@@ -8,11 +8,12 @@ package com.leo.application.visualiserapp;
 
 import com.leo.application.Application;
 import com.leo.application.visualiserapp.states.MenuState;
+import com.leo.application.window.Window;
 
 public class AlgorithmVisualiser extends Application {
 
-    public AlgorithmVisualiser(int width, int height) {
-        super(width, height);
+    public AlgorithmVisualiser(Window window) {
+        super(window);
         pushState(new MenuState(this));
     }
 

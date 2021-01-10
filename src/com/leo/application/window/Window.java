@@ -4,23 +4,26 @@
  *	Time:        16:01
  */
 
-
 package com.leo.application.window;
 
 import com.leo.application.Graphics;
 import com.leo.application.utils.Terminal;
 
 public class Window implements Graphics {
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     public Window(int width, int height) {
         Terminal.init();
-        // Resize terminal window
         Terminal.setSize(width, height);
-        Terminal.setFullScreen();
-        // Terminal.moveToTopLeft();
-        
+
+        this.width = width;
+        this.height = height;
+    }
+
+    public Window() {
+        Terminal.init();
+
         this.width = Terminal.getWidth();
         this.height = Terminal.getHeight();
     }
@@ -30,11 +33,19 @@ public class Window implements Graphics {
         Terminal.resetCursorPos();
     }
 
-	public int getWidth() {
-		return width;
-	}
+    public void setFullScreen() {
+        Terminal.setFullScreen();
+        width = Terminal.getWidth();
+        height = Terminal.getHeight();
+    }
 
-	public int getHeight() {
-		return height;
-	}
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
 }

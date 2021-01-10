@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Terminal {
+    private static final int W = 1;
+    private static final int H = 0;
     private static Logger logger;
     private static final String FILENAME = "logs.log";
     private static FileHandler fh = null;
@@ -94,6 +96,22 @@ public class Terminal {
         printWriter.flush();
     }
 
+    public static void init() {
+        switchProfile("HighPerformance");
+        enableRawInput();
+        saveState();
+        hideCursor();
+        clear();
+    }
+
+    public static void close() {
+        switchProfile("Default");
+        resetCursorPos();
+        showCursor();
+        disableRawInput();
+        restoreState();
+    }
+
     public static void resetCursorPos() {
         write("\033[1000F\033[1E");
         flush();
@@ -109,31 +127,23 @@ public class Terminal {
         String inputClean = System.console().readLine().replaceAll("[^0-9;]", "");
         String[] strSize = inputClean.split(";");
         int[] size = new int[2];
-        for (int i = 0; i < size.length; i++) {
-            size[i] = Integer.parseInt(strSize[i]);
+        try {
+            for (int i = 0; i < size.length; i++) {
+                size[i] = Integer.parseInt(strSize[i]);
+            }
+            size[H] -= 1;
+            return size;
+        } catch (NumberFormatException e) {
+            return new int[] {height, width};
         }
-        size[0] -= 1;
-        return size;
-    }
-
-    public static void init() {
-        enableRawInput();
-        saveState();
-        hideCursor();
-        clear();
-    }
-
-    public static void close() {
-        resetCursorPos();
-        showCursor();
-        disableRawInput();
-        restoreState();
     }
 
     private static void saveInitSize() {
         int[] initSize = getSize();
-        initHeight = initSize[0];
-        initWidth = initSize[1];
+        initWidth = initSize[W];
+        initHeight = initSize[H];
+        width = initWidth;
+        height = initHeight;
     }
 
     public static void setSize(int width, int height) {
@@ -158,6 +168,10 @@ public class Terminal {
     private static void showCursor() {
         write("\033[?25h");
         flush();
+    }
+
+    private static void switchProfile(String profile) {
+        write("\033]50;SetProfile=" + profile + "\007");
     }
 
     private static void enableRawInput() {
@@ -190,8 +204,8 @@ public class Terminal {
             Thread.currentThread().interrupt();
         }
         int[] newSize = getSize();
-        height = newSize[0];
-        width = newSize[1];
+        width = newSize[W];
+        height = newSize[H];
     }
 
     public static int getWidth() {

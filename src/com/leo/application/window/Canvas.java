@@ -20,8 +20,8 @@ import com.leo.application.utils.Terminal;
 import com.leo.application.window.Cell.Pixel;
 
 public class Canvas implements Updatable, Graphics {
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
     private final Cell[][] canvas;
     private final Map<DiscreteCoordinates, Cell> changeRequests = new HashMap<>();
     private final StringBuilder builder = new StringBuilder();
@@ -189,8 +189,8 @@ public class Canvas implements Updatable, Graphics {
 
             Terminal.write(builder.toString() + Color.RESET.value);
             Terminal.flush();
-            builder.append(deletedChars);
             clearCanvas();
+            builder.append(deletedChars);
         }
     }
 

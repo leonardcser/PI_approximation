@@ -7,6 +7,7 @@
 package com.leo.application;
 
 import com.leo.application.states.State;
+import com.leo.application.utils.Terminal;
 import com.leo.application.window.Canvas;
 import com.leo.application.window.Keyboard;
 import com.leo.application.window.Window;
@@ -20,8 +21,8 @@ public abstract class Application implements Updatable, Graphics, Listener, Term
     private final Deque<State> states;
     private boolean exit = false;
 
-    protected Application(int width, int height) {
-        this.window = new Window(width, height);
+    protected Application(Window window) {
+        this.window = window;
         this.canvas = new Canvas(window.getWidth(), window.getHeight());
         states = new ArrayDeque<>();
     }

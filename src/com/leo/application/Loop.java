@@ -11,13 +11,16 @@ import com.leo.application.utils.Terminal;
 import com.leo.application.visualiserapp.AlgorithmVisualiser;
 import com.leo.application.window.KeyListener;
 import com.leo.application.window.Keyboard;
+import com.leo.application.window.Window;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
-        // new Loop(new AlgorithmVisualiser(159, 45)).start();
-        // new Loop(new AlgorithmVisualiser(Terminal.getWidth(), Terminal.getHeight())).start();
-        // new Loop(new SnakeGame(40, 24)).start();
-        new Loop(new SnakeGame(0, 0)).start();
+        // Window window = new Window(159, 45);
+        // new Loop(new AlgorithmVisualiser(window)).start();
+        Window window = new Window(40, 24);
+        // Window window = new Window();
+        // window.setFullScreen();
+        new Loop(new SnakeGame(window)).start();
     }
 
     private final Application application;

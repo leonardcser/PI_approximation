@@ -2,6 +2,7 @@
 > **Current state:** functional
 ## Todo
 - [ ] create README
+- [ ] generalise KeyListener to any input (ex. window size)
 - [ ] add java doc
 - [ ] simplify code especially for Sort and Maze generator abstract classes
 - [ ] add description page for algorithms
