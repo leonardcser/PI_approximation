@@ -17,7 +17,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,6 +98,10 @@ public class Terminal {
     }
 
     public static void saveScreenSize() {
+        // save cursor position
+        // move to col 5000 row 5000
+        // request cursor position
+        // restore cursor position
         write("\033[s\033[5000;5000H\033[6n\033[u");
         flush();
         String inputClean = System.console().readLine().replaceAll("[^0-9;]", "");
@@ -152,6 +155,21 @@ public class Terminal {
         if (width > 0 && height > 0) {
             setSize(width, height);
         }
+    }
+
+    public static void setFullScreen() {
+        enableRawInput();
+        setSize(2000, 2000);
+        moveToTopLeft();
+        saveScreenSize();
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static int getHeight() {
+        return height;
     }
 
     public static void bip(Audio audio) {

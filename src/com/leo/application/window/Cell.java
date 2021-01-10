@@ -4,7 +4,6 @@
  *	Time:        22:30
  */
 
-
 package com.leo.application.window;
 
 import com.leo.application.maths.DiscreteCoordinates;
@@ -28,17 +27,23 @@ public class Cell {
     public boolean hasForground() {
         return pixel.forground != null;
     }
-    
+
     public boolean hasBackground() {
         return pixel.background != null;
     }
 
     public String getForground() {
-        return pixel.forground.value;
+        if (hasForground()) {
+            return pixel.forground.value;
+        }
+        return "";
     }
 
     public String getBackground() {
-        return pixel.background.value.replaceFirst("38", "48");
+        if (hasBackground()) {
+            return pixel.background.value.replaceFirst("38", "48");
+        }
+        return "";
     }
 
     public char getChar() {
@@ -46,24 +51,20 @@ public class Cell {
     }
 
     public boolean hasColor() {
-		return hasForground() || hasBackground();
-	}
+        return hasForground() || hasBackground();
+    }
 
     @Override
     public String toString() {
-        return "Cell{" +
-                "coordinate=" + coordinate +
-                ", char=" + pixel.character +
-                ", fg=" + pixel.forground +
-                ", bg=" + pixel.background +
-                '}';
+        return "Cell{" + "coordinate=" + coordinate + ", char=" + pixel.character + ", fg=" + pixel.forground + ", bg="
+                + pixel.background + '}';
     }
 
     public static class Pixel {
         public final char character;
         public final Color forground;
         public final Color background;
-    
+
         public Pixel(char character, Color forground, Color background) {
             this.character = character;
             this.forground = forground;
@@ -71,5 +72,4 @@ public class Cell {
         }
     }
 
-	
 }

@@ -168,9 +168,6 @@ public class Canvas implements Updatable, Graphics {
         builder.setLength(0);
         for (Cell[] line : canvas) {
             for (Cell cell : line) {
-                if (!cell.hasForground() || !cell.hasBackground()) {
-                    builder.append(Color.RESET.value);
-                }
                 if (cell.hasForground()) {
                     builder.append(cell.getForground());
                 }
@@ -178,6 +175,9 @@ public class Canvas implements Updatable, Graphics {
                     builder.append(cell.getBackground());
                 }
                 builder.append(cell.getChar());
+                if (cell.hasColor()) {
+                    builder.append(Color.RESET.value);
+                }
 
             }
             // Carriage return
@@ -189,8 +189,8 @@ public class Canvas implements Updatable, Graphics {
 
             Terminal.write(builder.toString() + Color.RESET.value);
             Terminal.flush();
-            clearCanvas();
             builder.append(deletedChars);
+            clearCanvas();
         }
     }
 

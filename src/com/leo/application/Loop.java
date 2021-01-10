@@ -14,8 +14,11 @@ import com.leo.application.window.Keyboard;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
+        Terminal.setFullScreen();
         // new Loop(new AlgorithmVisualiser(159, 45)).start();
-        new Loop(new SnakeGame(40, 24)).start();
+        // new Loop(new AlgorithmVisualiser(Terminal.getWidth(), Terminal.getHeight())).start();
+        // new Loop(new SnakeGame(40, 24)).start();
+        new Loop(new SnakeGame(Terminal.getWidth(), Terminal.getHeight())).start();
     }
 
     private final Application application;

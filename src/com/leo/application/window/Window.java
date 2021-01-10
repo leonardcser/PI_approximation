@@ -18,10 +18,8 @@ public class Window implements Graphics {
         Terminal.saveScreenSize();
         // Resize terminal window
         Terminal.setSize(width, height);
-        // Set position to top right
         Terminal.moveToTopLeft();
         Terminal.hideCursor();
-        // Clear terminal
         Terminal.clear();
 
     }

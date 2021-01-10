@@ -24,7 +24,7 @@ import com.leo.application.window.Keyboard;
 
 public class PlayState extends SnakeGameState {
     private static final int DEATH_TIMEOUT = 60;
-    private static final int SNAKE_FRAME_SPEED = 2;
+    private static final int SNAKE_FRAME_SPEED = 1;
     private static final int FOOD_LENGTH = 2;
     private final Random random = new Random();
     private final DiscreteCoordinates spawnCoordinates;
@@ -44,7 +44,9 @@ public class PlayState extends SnakeGameState {
 
     public PlayState(SnakeGame snakegame) {
         super(snakegame);
-        spawnCoordinates = new DiscreteCoordinates(getCanvas().getWidth() / 2, getCanvas().getHeight());
+        int x = getCanvas().getWidth() / 2;
+        int y = getCanvas().getHeight();
+        spawnCoordinates = new DiscreteCoordinates(x % 2 == 0 ? x : x + 1, y % 2 == 0 ? y : y + 1);
         snake.push(getOccupationList(spawnCoordinates));
         scoreText = new TextGraphics(getCanvas(), new DiscreteCoordinates(1, getCanvas().getHeight() - 2), "Score: 0");
         highScoreText = new TextGraphics(getCanvas(),
