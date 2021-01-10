@@ -26,6 +26,8 @@ public class Terminal {
     private static Logger logger;
     private static final String FILENAME = "logs.log";
     private static FileHandler fh = null;
+    private static int initWidth = 0;
+    private static int initHeight = 0;
     private static int width = 0;
     private static int height = 0;
 
@@ -97,7 +99,7 @@ public class Terminal {
         flush();
     }
 
-    public static void saveScreenSize() {
+    public static int[] getSize() {
         // save cursor position
         // move to col 5000 row 5000
         // request cursor position
@@ -110,8 +112,28 @@ public class Terminal {
         for (int i = 0; i < size.length; i++) {
             size[i] = Integer.parseInt(strSize[i]);
         }
-        height = size[0] - 1;
-        width = size[1];
+        size[0] -= 1;
+        return size;
+    }
+
+    public static void init() {
+        enableRawInput();
+        saveState();
+        hideCursor();
+        clear();
+    }
+
+    public static void close() {
+        resetCursorPos();
+        showCursor();
+        disableRawInput();
+        restoreState();
+    }
+
+    private static void saveInitSize() {
+        int[] initSize = getSize();
+        initHeight = initSize[0];
+        initWidth = initSize[1];
     }
 
     public static void setSize(int width, int height) {
@@ -128,40 +150,48 @@ public class Terminal {
         flush();
     }
 
-    public static void hideCursor() {
+    private static void hideCursor() {
         write("\033[?25l");
         flush();
     }
 
-    public static void showCursor() {
+    private static void showCursor() {
         write("\033[?25h");
         flush();
     }
 
-    public static void enableRawInput() {
+    private static void enableRawInput() {
         executeCmd("stty raw -echo </dev/tty");
     }
 
-    public static void disableRawInput() {
+    private static void disableRawInput() {
         executeCmd("stty -raw echo </dev/tty");
     }
 
-    public static void saveState() {
+    private static void saveState() {
+        saveInitSize();
         executeCmd("tput smcup");
     }
 
-    public static void restoreState() {
+    private static void restoreState() {
         executeCmd("tput rmcup");
-        if (width > 0 && height > 0) {
-            setSize(width, height);
+        if (initWidth > 0 && initHeight > 0) {
+            setSize(initWidth, initHeight);
         }
     }
 
     public static void setFullScreen() {
-        enableRawInput();
         setSize(2000, 2000);
         moveToTopLeft();
-        saveScreenSize();
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            logErr(e);
+            Thread.currentThread().interrupt();
+        }
+        int[] newSize = getSize();
+        height = newSize[0];
+        width = newSize[1];
     }
 
     public static int getWidth() {

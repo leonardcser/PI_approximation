@@ -22,7 +22,7 @@ public abstract class Application implements Updatable, Graphics, Listener, Term
 
     protected Application(int width, int height) {
         this.window = new Window(width, height);
-        this.canvas = new Canvas(width, height);
+        this.canvas = new Canvas(window.getWidth(), window.getHeight());
         states = new ArrayDeque<>();
     }
 

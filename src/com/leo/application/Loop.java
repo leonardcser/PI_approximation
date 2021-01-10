@@ -14,11 +14,10 @@ import com.leo.application.window.Keyboard;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
-        Terminal.setFullScreen();
         // new Loop(new AlgorithmVisualiser(159, 45)).start();
         // new Loop(new AlgorithmVisualiser(Terminal.getWidth(), Terminal.getHeight())).start();
         // new Loop(new SnakeGame(40, 24)).start();
-        new Loop(new SnakeGame(Terminal.getWidth(), Terminal.getHeight())).start();
+        new Loop(new SnakeGame(0, 0)).start();
     }
 
     private final Application application;
@@ -110,10 +109,7 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     @Override
     public void end() {
-        Terminal.resetCursorPos();
-        Terminal.showCursor();
-        Terminal.disableRawInput();
-        Terminal.restoreState();
+        Terminal.close();
         System.exit(0);
     }
 }
