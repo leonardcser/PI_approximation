@@ -30,7 +30,7 @@ public class PlayState extends SnakeGameState {
     private final DiscreteCoordinates spawnCoordinates;
     private final Deque<List<DiscreteCoordinates>> snake = new ArrayDeque<>();
     private Orientation currentOrientation = null;
-    private Orientation desiredOrientation = null;
+    private Deque<Orientation> desiredOrientations = new ArrayDeque<>();
     private List<DiscreteCoordinates> foodPosition = new ArrayList<>();
     private int frameCount = 0;
     private int timeoutCount = 0;
@@ -47,7 +47,8 @@ public class PlayState extends SnakeGameState {
         spawnCoordinates = new DiscreteCoordinates(getCanvas().getWidth() / 2, getCanvas().getHeight());
         snake.push(getOccupationList(spawnCoordinates));
         scoreText = new TextGraphics(getCanvas(), new DiscreteCoordinates(1, getCanvas().getHeight() - 2), "Score: 0");
-        highScoreText = new TextGraphics(getCanvas(), new DiscreteCoordinates(getCanvas().getWidth() - 16, getCanvas().getHeight() - 2), "");
+        highScoreText = new TextGraphics(getCanvas(),
+                new DiscreteCoordinates(getCanvas().getWidth() - 16, getCanvas().getHeight() - 2), "");
         placeRandomFood();
     }
 
@@ -63,8 +64,8 @@ public class PlayState extends SnakeGameState {
 
     private List<DiscreteCoordinates> getEmptyCoordinates() {
         List<DiscreteCoordinates> emptyCoords = new ArrayList<>();
-        for (int x = 2; x < getCanvas().getWidth() - 2; x += 2) {
-            for (int y = 2; y < getCanvas().getHeight() * 2 - 8; y += 2) {
+        for (int x = 2; x < getCanvas().getWidth() - 3; x += 2) {
+            for (int y = 2; y < getCanvas().getHeight() * 2 - 9; y += 2) {
                 DiscreteCoordinates coord = new DiscreteCoordinates(x, y);
                 boolean isEmpty = true;
                 for (List<DiscreteCoordinates> snakeCoord : snake) {
@@ -98,7 +99,8 @@ public class PlayState extends SnakeGameState {
         scoreText.setText("Score: 0");
         snake.clear();
         snake.push(getOccupationList(spawnCoordinates));
-        desiredOrientation = null;
+        desiredOrientations.clear();
+        ;
         currentOrientation = null;
         placeRandomFood();
     }
@@ -111,16 +113,16 @@ public class PlayState extends SnakeGameState {
                 super.getSnakeGame().end();
                 break;
             case UP:
-                desiredOrientation = Orientation.UP;
+                desiredOrientations.push(Orientation.UP);
                 break;
             case DOWN:
-                desiredOrientation = Orientation.DOWN;
+                desiredOrientations.push(Orientation.DOWN);
                 break;
             case LEFT:
-                desiredOrientation = Orientation.LEFT;
+                desiredOrientations.push(Orientation.LEFT);
                 break;
             case RIGHT:
-                desiredOrientation = Orientation.RIGHT;
+                desiredOrientations.push(Orientation.RIGHT);
                 break;
             case SPACE:
                 currentOrientation = null;
@@ -135,8 +137,9 @@ public class PlayState extends SnakeGameState {
     public void update() {
         // Switch orientation
         if (!isDead) {
-            if ((snake.peek().get(0).x % 2 == 0) && (snake.peek().get(0).y % 2 == 0)) {
-                currentOrientation = desiredOrientation;
+            if (!desiredOrientations.isEmpty() && (snake.peek().get(0).x % 2 == 0)
+                    && (snake.peek().get(0).y % 2 == 0)) {
+                currentOrientation = desiredOrientations.poll();
             }
 
             ++frameCount;
@@ -202,7 +205,6 @@ public class PlayState extends SnakeGameState {
             getCanvas().requestPixelChange(new DiscreteCoordinates(0, y), Color.WHITE, 10);
             getCanvas().requestPixelChange(new DiscreteCoordinates(getCanvas().getWidth() - 1, y), Color.WHITE, 10);
         }
-        
 
         scoreText.update();
         highScoreText.update();
@@ -225,8 +227,8 @@ public class PlayState extends SnakeGameState {
             List<DiscreteCoordinates> newHeadCoords = snake.peek();
             boolean touchedWalls = false;
             for (DiscreteCoordinates headCoord : newHeadCoords) {
-                if (headCoord.x < 2 || headCoord.x > getCanvas().getWidth() - 2 || headCoord.y < 2
-                        || headCoord.y > getCanvas().getHeight() * 2 - 8) {
+                if (headCoord.x < 2 || headCoord.x > getCanvas().getWidth() - 3 || headCoord.y < 2
+                        || headCoord.y > getCanvas().getHeight() * 2 - 9) {
                     touchedWalls = true;
                     break;
                 }

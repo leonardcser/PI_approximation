@@ -13,13 +13,16 @@ import com.leo.application.utils.Terminal;
 public class Window implements Graphics {
 
     public Window(int width, int height) {
+        Terminal.enableRawInput();
+        Terminal.saveState();
+        Terminal.saveScreenSize();
         // Resize terminal window
-        Terminal.write("\033[8;" + (height + 1) + ";" + width + "t");
+        Terminal.setSize(width, height);
         // Set position to top right
-        Terminal.write("\033[3;0;0t");
-        Terminal.flush();
+        Terminal.moveToTopLeft();
+        Terminal.hideCursor();
         // Clear terminal
-        Terminal.executeCmd("clear");
+        Terminal.clear();
 
     }
 

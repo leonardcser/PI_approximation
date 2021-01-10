@@ -60,7 +60,7 @@ public class Cell {
     }
 
     public static class Pixel {
-        private final char character;
+        public final char character;
         public final Color forground;
         public final Color background;
     

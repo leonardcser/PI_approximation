@@ -79,8 +79,7 @@ if [ -d "./bin" ]; then
 fi
 # create bin dir
 mkdir bin
-# Make cursor invisible
-printf '\u001b[?25l'
+# printf '\u001b[?25l'
 
 # Compile all java files
 readonly EXPECTED_BIN_SIZE=384
@@ -105,12 +104,6 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
         echo -ne "\rDone!                                                                         \n"
     fi
     
-    # save screen state
-    tput smcup
-    # Enable raw mode
-    stty raw -echo
-    
-    
     # Launch main Class (Loop.class)
     java -cp bin com.leo.application.Loop
     
@@ -130,13 +123,6 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
       tell application "iTerm" to close window 1
 EOF
     fi
-    # Make cursor visible
-    printf '\u001b[?25h'
-    stty -raw echo
-    clear
-    # restore screen state
-    tput rmcup
-    
 else
     # Red High intensity color
     echo -ne "\n\n\033[0;91m"

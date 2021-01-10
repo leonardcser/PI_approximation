@@ -17,6 +17,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,8 @@ public class Terminal {
     private static Logger logger;
     private static final String FILENAME = "logs.log";
     private static FileHandler fh = null;
+    private static int width = 0;
+    private static int height = 0;
 
     private static final PrintWriter printWriter = new PrintWriter(
             new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), 512));
@@ -95,6 +98,62 @@ public class Terminal {
         flush();
     }
 
+    public static void saveScreenSize() {
+        write("\033[s\033[5000;5000H\033[6n\033[u");
+        flush();
+        String inputClean = System.console().readLine().replaceAll("[^0-9;]", "");
+        String[] strSize = inputClean.split(";");
+        int[] size = new int[2];
+        for (int i = 0; i < size.length; i++) {
+            size[i] = Integer.parseInt(strSize[i]);
+        }
+        height = size[0] - 1;
+        width = size[1];
+    }
+
+    public static void setSize(int width, int height) {
+        write("\033[8;" + (height + 1) + ";" + width + "t");
+        flush();
+    }
+
+    public static void clear() {
+        executeCmd("clear");
+    }
+
+    public static void moveToTopLeft() {
+        write("\033[3;0;0t");
+        flush();
+    }
+
+    public static void hideCursor() {
+        write("\033[?25l");
+        flush();
+    }
+
+    public static void showCursor() {
+        write("\033[?25h");
+        flush();
+    }
+
+    public static void enableRawInput() {
+        executeCmd("stty raw -echo </dev/tty");
+    }
+
+    public static void disableRawInput() {
+        executeCmd("stty -raw echo </dev/tty");
+    }
+
+    public static void saveState() {
+        executeCmd("tput smcup");
+    }
+
+    public static void restoreState() {
+        executeCmd("tput rmcup");
+        if (width > 0 && height > 0) {
+            setSize(width, height);
+        }
+    }
+
     public static void bip(Audio audio) {
         new Thread(() -> executeCmd("afplay bin/sounds/" + audio.filename)).start();
     }
@@ -127,7 +186,7 @@ public class Terminal {
     public static void writePID() {
         // Use the engine management bean in java to find out the pid
         // and to write to a file
-        
+
         String pid = ManagementFactory.getRuntimeMXBean().getName();
         if (pid.indexOf("@") != -1) {
             pid = pid.substring(0, pid.indexOf("@"));

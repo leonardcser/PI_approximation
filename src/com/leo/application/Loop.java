@@ -28,12 +28,12 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     private int upsCounter;
 
     public Loop(Application application) {
+        Terminal.redirectErr();
+        // Terminal.writePID();
         this.application = application;
     }
 
     public void start() {
-        Terminal.redirectErr();
-        Terminal.writePID();
         isRunning = true;
         Thread thread = new Thread(this);
         thread.start();
@@ -96,7 +96,7 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            Terminal.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            // Terminal.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             // Set title to fps
             Terminal.executeCmd("printf '\033]2;" + "Fps:" + fpsCounter + "\u0007'");
             fpsCounter = 0;
@@ -108,6 +108,9 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     @Override
     public void end() {
         Terminal.resetCursorPos();
+        Terminal.showCursor();
+        Terminal.disableRawInput();
+        Terminal.restoreState();
         System.exit(0);
     }
 }

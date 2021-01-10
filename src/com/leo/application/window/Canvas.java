@@ -109,36 +109,40 @@ public class Canvas implements Updatable, Graphics {
         Color bg = background;
 
         char pixelType;
-        boolean isEven = coord.y % 2 == 0;
+        boolean isTopPixel = coord.y % 2 == 0;
 
         DiscreteCoordinates reScaled = new DiscreteCoordinates(coord.x, coord.y / 2);
         if (changeRequests.get(reScaled) != null) {
             Cell oldCell = changeRequests.get(reScaled);
+            boolean hasForground = false;
+            boolean hasBackground= false;
             if (color == null) {
                 fg = oldCell.pixel.forground;
                 bg = color; // bg = null
-                if (isEven) {
+                if (isTopPixel) {
                     pixelType = '▄';
                 } else {
                     pixelType = '▀';
 
                 }
-            } else if (isEven) {
+            } else if (isTopPixel) {
                 pixelType = '▀';
                 fg = color;
                 bg = oldCell.pixel.forground;
+                hasForground = true;
             } else {
-                pixelType = '▀';
+                pixelType = oldCell.pixel.character;
                 fg = oldCell.pixel.forground;
                 bg = color;
+                hasBackground = true;
             }
-            if (oldCell.priority <= priority || (bg == color && oldCell.pixel.background == null)
-                    || (fg == color && oldCell.pixel.forground == null)) {
-                changeRequests.replace(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), priority));
+            if (oldCell.priority <= priority || (hasBackground && oldCell.pixel.background == null)
+                    || (hasForground && oldCell.pixel.forground == null)) {
+                changeRequests.replace(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), Math.max(priority, oldCell.priority)));
             }
         } else if (color != null) {
             fg = color;
-            if (isEven) {
+            if (isTopPixel) {
                 // Top pixel
                 pixelType = '▀';
                 // bg = background
@@ -204,7 +208,7 @@ public class Canvas implements Updatable, Graphics {
                     --tmpBuilderIndex;
                 }
             }
-            int[] bounds = new int[] { builderIndex < builder.length() - 16 ? builderIndex + 15 : builder.length(),
+            int[] bounds = new int[] { builderIndex < builder.length() - 21 ? builderIndex + 20 : builder.length(),
                     builder.length() };
 
             deletedChars = builder.substring(bounds[0], bounds[1]);
