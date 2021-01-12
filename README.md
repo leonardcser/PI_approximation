@@ -41,7 +41,8 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 1. Create new package in /application
 2. Create new class overriding Application.java
 3. Create new "states" package in this new package
-4. Create new abstract class in "states" package
+4. Create new abstract class in "states" package overriding State.java
+5. Create a class for each state of the application in "states" package overriding "YourApplicationState".java (abstract class)
 
 #### This is an example of how the file tree would look like:
 <pre>
@@ -54,7 +55,7 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
             └── "YourState.java" .............. overrides "YourApplicationState.java"
 </pre>
 
-5. Add a new instance of the Application in [Loop.java](src/com/leo/application/Loop.java) main method
+6. Add a new instance of the Application in [Loop.java](src/com/leo/application/Loop.java) main method
 
 <a name="demo"></a>
 ## Demos
