@@ -60,12 +60,12 @@ public class Cell {
                 + pixel.background + '}';
     }
 
-    protected static class Pixel {
+    public static class Pixel {
         protected final char character;
         protected final Color forground;
         protected final Color background;
 
-        protected Pixel(char character, Color forground, Color background) {
+        public Pixel(char character, Color forground, Color background) {
             this.character = character;
             this.forground = forground;
             this.background = background;

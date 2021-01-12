@@ -9,7 +9,7 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-cd dev/Java/Terminal_AlgorithmVisualiser/
+cd dev/Java/TerminalEngine/
 printf '\e[3;1442;0t'
 clear
 tail -f -n100 logs.log | awk '

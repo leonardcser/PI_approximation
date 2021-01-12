@@ -55,7 +55,7 @@ function wait_for_process() {
 
 # -------------------------------------------- MAIN --------------------------------------------
 
-cd dev/Java/Terminal_AlgorithmVisualiser/
+cd dev/Java/TerminalEngine/
 debug_mode=false
 # check if is debug mode
 if [ "${1}" = "-d" ]; then
@@ -64,7 +64,7 @@ if [ "${1}" = "-d" ]; then
     tell application "iTerm"
       create window with default profile
       tell current session of window 1
-        write text "bash dev/Java/Terminal_AlgorithmVisualiser/logging.sh"
+        write text "bash dev/Java/TerminalEngine/logging.sh"
         set columns to 65
         set rows to 39
       end tell

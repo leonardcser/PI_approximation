@@ -25,8 +25,8 @@
 
 <a name="todo"></a>
 ## Todo
-[ ] add java doc  
-[ ] simplify use  
+- [ ] add java doc  
+- [ ] simplify use  
 ...
 
 <a name="cells-vs-pixels"></a>
@@ -59,6 +59,13 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 <a name="demo"></a>
 ## Demos
 Check out [/visualiserapp](src/com/leo/application/visualiserapp) and [/snakegame](src/com/leo/application/snakegame). These are for now only proofs of concept and the code is not perfect neither optimised.
+
+### Visualiser App
+![menuAlgorithms](res/demo/menuAlgorithms.png)
+![quickSort](res/demo/quickSort.png)
+![maze](res/demo/maze.png)
+### Snake Game
+![snake](res/demo/snake.png)
 
 <a name="contribution"></a>
 ## Contribution

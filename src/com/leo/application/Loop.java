@@ -15,12 +15,12 @@ import com.leo.application.window.Window;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public static void main(String[] args) {
-        Window window = new Window();
-        // Window window = new Window(159, 45);
+        // Window window = new Window();
+        Window window = new Window(159, 45);
         // Window window = new Window(40, 24);
         // window.setFullScreen();
-        // new Loop(new AlgorithmVisualiser(window)).start();
-        new Loop(new SnakeGame(window)).start();
+        new Loop(new AlgorithmVisualiser(window)).start();
+        // new Loop(new SnakeGame(window)).start();
     }
 
     private final Application application;
