@@ -8,6 +8,7 @@
 - [Cells vs Pixels](#cells-vs-pixels)
 - [How to use (in current state)](#how-to-use)
 - [Demos](#demos)
+- [Contribution](#contribution)
 
 <a name="features"></a>
 ## Features
@@ -58,3 +59,7 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 <a name="demo"></a>
 ## Demos
 Check out [/visualiserapp](src/com/leo/application/visualiserapp) and [/snakegame](src/com/leo/application/snakegame). These are for now only proofs of concept and the code is not perfect neither optimised.
+
+<a name="contribution"></a>
+## Contribution
+Feel free to contact me: leocser632@gmail.com as well as suggesting ideas or features :)
