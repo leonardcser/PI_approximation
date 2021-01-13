@@ -99,7 +99,7 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
         cp -a res/. bin/ &
         BACK_PID=$!
         # wait process to finish
-        readonly EXPECTED_RES_SIZE=384
+        readonly EXPECTED_RES_SIZE=1376
         wait_for_process $BACK_PID $EXPECTED_RES_SIZE "./res"
         echo -ne "\rDone!                                                                         \n"
     fi
