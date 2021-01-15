@@ -22,12 +22,12 @@ public class Terminal implements Graphics {
 
     public Terminal(Window window) {
         this.window = window;
+        init();
         if (window.isFullScreen()) {
             setFullScreen();
         } else if (window.getWidth() != 0 && window.getHeight() != 0) {
             setSize(window.getWidth(), window.getHeight());
         }
-        init();
     }
 
     public Window getWindow() {
@@ -78,9 +78,11 @@ public class Terminal implements Graphics {
     }
 
     private void saveState() {
-        int[] size = getSize();
-        window.setWidth(size[W]);
-        window.setHeight(size[H]);
+        if (window.getWidth() == 0 && window.getHeight() == 0) {
+            int[] size = getSize();
+            window.setWidth(size[W]);
+            window.setHeight(size[H]);
+        }
         window.setInitWidth(window.getWidth());
         window.setInitHeight(window.getHeight());
         executeCmd("tput smcup");

@@ -6,24 +6,11 @@
 
 package com.leo.jtengine;
 
-import com.leo.jtengine.snakegame.SnakeGame;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.utils.TerminalLogger;
 import com.leo.jtengine.window.KeyListener;
 import com.leo.jtengine.window.Keyboard;
-import com.leo.jtengine.window.Window;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
-
-    public static void main(String[] args) {
-        Window window = new Window();
-        Terminal terminal = new Terminal(window);
-        // Window window = new Window(159, 45);
-        // Window window = new Window(40, 24);
-//        window.setFullScreen();
-//        new Loop(new AlgorithmVisualiser(window)).start();
-        new Loop(new SnakeGame(terminal)).start();
-    }
 
     private static final int FPS = 60;
     private final Application application;

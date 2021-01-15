@@ -144,8 +144,7 @@ public class Canvas implements Updatable, Graphics {
             if (oldCell.priority <= priority || (hasBackground && oldCell.pixel.background == null)
                     || (hasForground && oldCell.pixel.forground == null)) {
                 changeRequests.replace(reScaled,
-                                       new Cell(reScaled, new Pixel(pixelType, fg, bg),
-                                                Math.max(priority, oldCell.priority)));
+                        new Cell(reScaled, new Pixel(pixelType, fg, bg), Math.max(priority, oldCell.priority)));
             }
         } else if (color != null) {
             fg = color;
@@ -167,9 +166,10 @@ public class Canvas implements Updatable, Graphics {
     public void render() {
         String tmpBuffer = buffer.toString();
         buffer.setLength(0);
-        int del = 0;
-        for (Cell[] line : canvas) {
-            for (Cell cell : line) {
+        for (int i = 0; i < canvas.length; i++) {
+            for (int j = 0; j < canvas[i].length; j++) {
+                Cell cell = canvas[i][j];
+
                 if (cell.hasForground()) {
                     buffer.append(cell.getForground());
                 }
@@ -180,7 +180,6 @@ public class Canvas implements Updatable, Graphics {
                 if (cell.hasColor()) {
                     buffer.append(Color.RESET.value);
                 }
-
             }
             // Carriage return
             buffer.append("\033[1E");
@@ -189,7 +188,6 @@ public class Canvas implements Updatable, Graphics {
         if (!buffer.toString().equals(tmpBuffer)) {
             String deletedChars = cleanBuffer(tmpBuffer);
 
-            TerminalLogger.log(del + "");
             terminal.write(buffer.toString() + Color.RESET.value);
             terminal.flush();
             clearCanvas();
@@ -212,8 +210,8 @@ public class Canvas implements Updatable, Graphics {
                     --tmpBufferIndex;
                 }
             }
-            int[] bounds = new int[]{bufferIndex < buffer.length() - 21 ? bufferIndex + 20 : buffer.length(),
-                                     buffer.length()};
+            int[] bounds = new int[] { bufferIndex < buffer.length() - 21 ? bufferIndex + 20 : buffer.length(),
+                    buffer.length() };
 
             deletedChars = buffer.substring(bounds[0], bounds[1]);
             buffer.delete(bounds[0], bounds[1]);

@@ -105,8 +105,8 @@ if [ $SIZE -ge $EXPECTED_BIN_SIZE -a -d "./bin" -a $progress -ne 0 ]; then
         echo -ne "\rDone!                                                                         \n"
     fi
     
-    # Launch main Class (Loop.class)
-    java -cp bin com.leo.jtengine.Loop
+    # Launch main Class (Run.class)
+    java -cp bin com.leo.jtengine.Run
     
     # End script
     if [ "$debug_mode" = "true" ]; then
