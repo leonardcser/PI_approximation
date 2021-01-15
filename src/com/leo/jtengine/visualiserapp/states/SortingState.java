@@ -6,15 +6,9 @@
 
 package com.leo.jtengine.visualiserapp.states;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import com.leo.jtengine.graphics.TextGraphics;
 import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.utils.Audio;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.visualiserapp.AlgorithmVisualiser;
 import com.leo.jtengine.visualiserapp.algorithms.sorting.BubbleSort;
 import com.leo.jtengine.visualiserapp.algorithms.sorting.QuickSort;
@@ -22,6 +16,11 @@ import com.leo.jtengine.visualiserapp.algorithms.sorting.Sort;
 import com.leo.jtengine.visualiserapp.algorithms.sorting.SortingAlgorithm;
 import com.leo.jtengine.window.Cell;
 import com.leo.jtengine.window.Keyboard;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class SortingState extends AlgorithmVisualiserState {
     private final TextGraphics title;
@@ -61,7 +60,7 @@ public class SortingState extends AlgorithmVisualiserState {
     public boolean keyDown(Keyboard key) {
         switch (key) {
             case ESC:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
 
                 if (!sortingAlgorithm.isFinished()) {
                     sortingAlgorithm.stop();
@@ -69,7 +68,7 @@ public class SortingState extends AlgorithmVisualiserState {
                 getAlgorithmVisualiser().removeFirstState();
                 break;
             case SPACE:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
 
                 if (!sortingAlgorithm.isFinished()) {
                     sortingAlgorithm.stop();
@@ -81,7 +80,7 @@ public class SortingState extends AlgorithmVisualiserState {
                 generateBars(true);
                 break;
             case ENTER:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
 
                 if (sortingAlgorithm.isFinished()) {
                     new Thread(sortingAlgorithm).start();
@@ -91,13 +90,13 @@ public class SortingState extends AlgorithmVisualiserState {
                 break;
             case LEFT:
                 if (sortingAlgorithm.decreaseSpeed()) {
-                    Terminal.bip(Audio.MENU_CLICK);
+                    getTerminal().bip(Audio.MENU_CLICK);
                 }
 
                 break;
             case RIGHT:
                 if (sortingAlgorithm.increaseSpeed()) {
-                    Terminal.bip(Audio.MENU_CLICK);
+                    getTerminal().bip(Audio.MENU_CLICK);
                 }
                 break;
             default:
@@ -112,7 +111,7 @@ public class SortingState extends AlgorithmVisualiserState {
         for (int i = 0; i < barLengths.length; ++i) {
             for (int j = 1; j <= barLengths[i]; ++j) {
                 getCanvas().requestCellChange(new Cell(new DiscreteCoordinates(i, getCanvas().getHeight() - j), '█',
-                        sortingAlgorithm.getStates()[i], 1));
+                                                       sortingAlgorithm.getStates()[i], 1));
             }
         }
         if (!sortingAlgorithm.isFinished()) {

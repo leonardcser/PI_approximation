@@ -1,7 +1,7 @@
 /**
- *  Author:     Leonard Cseres
- *  Date:       Fri Jan 08 2021
- *  Time:       15:32:04
+ * Author:     Leonard Cseres
+ * Date:       Fri Jan 08 2021
+ * Time:       15:32:04
  */
 
 
@@ -18,15 +18,15 @@ public class MenuState extends SnakeGameState {
     }
 
     @Override
-    public boolean keyDown(Keyboard key) {
-        // TODO Auto-generated method stub
-        return super.keyDown(key);
-    }
-
-    @Override
     public boolean keyPressed(Keyboard key) {
         // TODO Auto-generated method stub
         return super.keyPressed(key);
+    }
+
+    @Override
+    public boolean keyDown(Keyboard key) {
+        // TODO Auto-generated method stub
+        return super.keyDown(key);
     }
 
     @Override
@@ -41,6 +41,5 @@ public class MenuState extends SnakeGameState {
 
     }
 
-    
 
 }

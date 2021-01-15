@@ -16,6 +16,11 @@ public class BubbleSort extends Sort {
     }
 
     @Override
+    public String toString() {
+        return "Bubble Sort";
+    }
+
+    @Override
     protected void sort(Integer[] arr, int start, int end) {
         boolean exit;
         do {
@@ -38,8 +43,5 @@ public class BubbleSort extends Sort {
         reset();
     }
 
-    @Override
-    public String toString() {
-        return "Bubble Sort";
-    }
+
 }

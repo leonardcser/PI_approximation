@@ -6,24 +6,26 @@
 
 package com.leo.jtengine;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import com.leo.jtengine.states.State;
 import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.window.Canvas;
 import com.leo.jtengine.window.Keyboard;
 import com.leo.jtengine.window.Window;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public abstract class Application implements Updatable, Graphics, Listener, Terminatable {
-    private final Canvas canvas;
+    private final Terminal terminal;
     private final Window window;
+    private final Canvas canvas;
     private final Deque<State> states;
     private boolean exit = false;
 
-    protected Application(Window window) {
-        this.window = window;
-        this.canvas = new Canvas(window.getWidth(), window.getHeight());
+    protected Application(Terminal terminal) {
+        this.terminal = terminal;
+        this.window = terminal.getWindow();
+        this.canvas = new Canvas(terminal);
         states = new ArrayDeque<>();
     }
 
@@ -35,6 +37,10 @@ public abstract class Application implements Updatable, Graphics, Listener, Term
         return window;
     }
 
+    public Terminal getTerminal() {
+        return terminal;
+    }
+
     public void pushState(State state) {
         states.push(state);
     }
@@ -44,18 +50,18 @@ public abstract class Application implements Updatable, Graphics, Listener, Term
     }
 
     @Override
-    public boolean keyDown(Keyboard key) {
-        return states.peekFirst().keyDown(key);
-    }
-
-    @Override
     public boolean keyPressed(Keyboard key) {
         return states.peekFirst().keyPressed(key);
     }
 
     @Override
+    public boolean keyDown(Keyboard key) {
+        return states.peekFirst().keyDown(key);
+    }
+
+    @Override
     public void render() {
-        window.render();
+        terminal.render();
         canvas.render();
         assert states.peekFirst() != null;
     }

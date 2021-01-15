@@ -17,8 +17,8 @@ public class StringArrayGraphics implements Updatable {
     private final int priority = 10;
     private final Canvas canvas;
     private final DiscreteCoordinates coordinates;
-    private char[][] array;
     private final Color color;
+    private final char[][] array;
 
 
     public StringArrayGraphics(Canvas canvas, DiscreteCoordinates coordinates, String[] array) {
@@ -39,7 +39,9 @@ public class StringArrayGraphics implements Updatable {
     public void update() {
         for (int i = 0; i < array.length; ++i) {
             for (int j = 0; j < array[i].length; ++j) {
-                canvas.requestCellChange(new Cell(new DiscreteCoordinates(coordinates.x + j, coordinates.y + i), array[i][j], color, priority));
+                canvas.requestCellChange(
+                        new Cell(new DiscreteCoordinates(coordinates.x + j, coordinates.y + i), array[i][j], color,
+                                 priority));
             }
         }
     }

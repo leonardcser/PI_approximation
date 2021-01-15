@@ -7,13 +7,13 @@
 package com.leo.jtengine.visualiserapp;
 
 import com.leo.jtengine.Application;
+import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.visualiserapp.states.MenuState;
-import com.leo.jtengine.window.Window;
 
 public class AlgorithmVisualiser extends Application {
 
-    public AlgorithmVisualiser(Window window) {
-        super(window);
+    public AlgorithmVisualiser(Terminal terminal) {
+        super(terminal);
         pushState(new MenuState(this));
     }
 

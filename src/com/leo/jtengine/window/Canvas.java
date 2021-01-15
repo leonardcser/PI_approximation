@@ -6,37 +6,32 @@
 
 package com.leo.jtengine.window;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.leo.jtengine.Graphics;
 import com.leo.jtengine.Updatable;
 import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.utils.Color;
 import com.leo.jtengine.utils.Terminal;
+import com.leo.jtengine.utils.TerminalLogger;
 import com.leo.jtengine.window.Cell.Pixel;
 
+import java.util.*;
+
 public class Canvas implements Updatable, Graphics {
-    private int width;
-    private int height;
+    private final Terminal terminal;
     private final Cell[][] canvas;
     private final Map<DiscreteCoordinates, Cell> changeRequests = new HashMap<>();
     private final StringBuilder buffer = new StringBuilder();
+    private final int width;
+    private final int height;
+    private final List<Integer> priorityList = new ArrayList<>();
     private Color background = null;
-    private List<Integer> priorityList = new ArrayList<>();
 
-    public Canvas(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public Canvas(Terminal terminal) {
+        this.terminal = terminal;
+        this.width = terminal.getWindow().getWidth();
+        this.height = terminal.getWindow().getHeight();
         canvas = new Cell[height][width];
         clearCanvas();
-    }
-
-    public void setBackground(Color background) {
-        this.background = background;
     }
 
     public void clearCanvas() {
@@ -45,6 +40,10 @@ public class Canvas implements Updatable, Graphics {
                 canvas[y][x] = new Cell(new DiscreteCoordinates(x, y), ' ', null, 0);
             }
         }
+    }
+
+    public void setBackground(Color background) {
+        this.background = background;
     }
 
     public int getHeight() {
@@ -61,13 +60,6 @@ public class Canvas implements Updatable, Graphics {
 
     public Cell getCell(DiscreteCoordinates coor) {
         return canvas[coor.y][coor.x];
-    }
-
-    public boolean isOutOfBound(Cell cell) {
-        int x = cell.coordinate.x;
-        int y = cell.coordinate.y;
-
-        return (y < 0) || (x < 0) || (y > height - 1) || (x > width - 1);
     }
 
     public boolean isOutOfBound(int x, int y) {
@@ -95,13 +87,26 @@ public class Canvas implements Updatable, Graphics {
         if (!isOutOfBound(cell)) {
             canvas[cell.coordinate.y][cell.coordinate.x] = cell;
         } else {
-            Terminal.logErr("Setting cell outside of bounds: " + cell.toString());
+            TerminalLogger.logErr("Setting cell outside of bounds: " + cell.toString());
         }
+    }
+
+    public boolean isOutOfBound(Cell cell) {
+        int x = cell.coordinate.x;
+        int y = cell.coordinate.y;
+
+        return (y < 0) || (x < 0) || (y > height - 1) || (x > width - 1);
     }
 
     public void requestCellChange(Cell cell) {
         changeRequests.put(new DiscreteCoordinates(cell.coordinate.x, cell.coordinate.y), cell);
         updatePriorityList(cell.priority);
+    }
+
+    private void updatePriorityList(int priority) {
+        if (!priorityList.contains(priority)) {
+            priorityList.add(priority);
+        }
     }
 
     public void requestPixelChange(DiscreteCoordinates coord, Color color, int priority) {
@@ -118,7 +123,7 @@ public class Canvas implements Updatable, Graphics {
             boolean hasBackground = false;
             if (color == null) {
                 fg = oldCell.pixel.forground;
-                bg = color; // bg = null
+                bg = null; // bg = null
                 if (isTopPixel) {
                     pixelType = '▄';
                 } else {
@@ -139,7 +144,8 @@ public class Canvas implements Updatable, Graphics {
             if (oldCell.priority <= priority || (hasBackground && oldCell.pixel.background == null)
                     || (hasForground && oldCell.pixel.forground == null)) {
                 changeRequests.replace(reScaled,
-                        new Cell(reScaled, new Pixel(pixelType, fg, bg), Math.max(priority, oldCell.priority)));
+                                       new Cell(reScaled, new Pixel(pixelType, fg, bg),
+                                                Math.max(priority, oldCell.priority)));
             }
         } else if (color != null) {
             fg = color;
@@ -155,12 +161,6 @@ public class Canvas implements Updatable, Graphics {
             changeRequests.put(reScaled, new Cell(reScaled, new Pixel(pixelType, fg, bg), priority));
         }
         updatePriorityList(priority);
-    }
-
-    private void updatePriorityList(int priority) {
-        if (!priorityList.contains(priority)) {
-            priorityList.add(priority);
-        }
     }
 
     @Override
@@ -186,12 +186,12 @@ public class Canvas implements Updatable, Graphics {
             buffer.append("\033[1E");
         }
 
-        if (!buffer.toString().equals(tmpBuffer.toString())) {
+        if (!buffer.toString().equals(tmpBuffer)) {
             String deletedChars = cleanBuffer(tmpBuffer);
 
-            Terminal.log(del + "");
-            Terminal.write(buffer.toString() + Color.RESET.value);
-            Terminal.flush();
+            TerminalLogger.log(del + "");
+            terminal.write(buffer.toString() + Color.RESET.value);
+            terminal.flush();
             clearCanvas();
             buffer.append(deletedChars);
         }
@@ -212,8 +212,8 @@ public class Canvas implements Updatable, Graphics {
                     --tmpBufferIndex;
                 }
             }
-            int[] bounds = new int[] { bufferIndex < buffer.length() - 21 ? bufferIndex + 20 : buffer.length(),
-                    buffer.length() };
+            int[] bounds = new int[]{bufferIndex < buffer.length() - 21 ? bufferIndex + 20 : buffer.length(),
+                                     buffer.length()};
 
             deletedChars = buffer.substring(bounds[0], bounds[1]);
             buffer.delete(bounds[0], bounds[1]);

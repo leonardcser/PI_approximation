@@ -6,10 +6,10 @@
 
 package com.leo.jtengine.visualiserapp.algorithms.maze;
 
-import java.util.*;
-
 import com.leo.jtengine.maths.DiscreteCoordinates;
-import com.leo.jtengine.utils.Terminal;
+import com.leo.jtengine.utils.TerminalLogger;
+
+import java.util.*;
 
 public class RecursiveBackTracker extends MazeGenerator {
     private final Deque<MazeCell> activeCells = new ArrayDeque<>();
@@ -82,7 +82,7 @@ public class RecursiveBackTracker extends MazeGenerator {
         try {
             Thread.sleep(getGenerateSleepTime());
         } catch (InterruptedException e) {
-            Terminal.logErr(e);
+            TerminalLogger.logErr(e);
             Thread.currentThread().interrupt();
         }
         while (isPaused() && !isExit()) {

@@ -44,7 +44,7 @@ public class TextGraphics implements Updatable {
     public void update() {
         for (int i = 0; i < text.length; ++i) {
             canvas.requestCellChange(new Cell(new DiscreteCoordinates(coordinates.x + i, coordinates.y), text[i], color,
-                                 priority));
+                                              priority));
         }
     }
 

@@ -6,46 +6,58 @@
 
 package com.leo.jtengine.window;
 
-import com.leo.jtengine.Graphics;
-import com.leo.jtengine.utils.Terminal;
-
-public class Window implements Graphics {
+public class Window {
+    private int initWidth;
+    private int initHeight;
     private int width;
     private int height;
-
+    private boolean fullScreen = false;
+    public Window() {
+        this(0, 0);
+    }
     public Window(int width, int height) {
-        Terminal.init();
-        Terminal.setSize(width, height);
-
         this.width = width;
         this.height = height;
     }
 
-    public Window() {
-        Terminal.init();
-
-        this.width = Terminal.getWidth();
-        this.height = Terminal.getHeight();
-    }
-
-    @Override
-    public void render() {
-        Terminal.resetCursorPos();
+    public boolean isFullScreen() {
+        return fullScreen;
     }
 
     public void setFullScreen() {
-        Terminal.setFullScreen();
-        width = Terminal.getWidth();
-        height = Terminal.getHeight();
+        this.fullScreen = true;
     }
 
+    public int getInitWidth() {
+        return initWidth;
+    }
+
+    public void setInitWidth(int initWidth) {
+        this.initWidth = initWidth;
+    }
+
+    public int getInitHeight() {
+        return initHeight;
+    }
+
+    public void setInitHeight(int initHeight) {
+        this.initHeight = initHeight;
+    }
 
     public int getWidth() {
         return width;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     public int getHeight() {
         return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
 }

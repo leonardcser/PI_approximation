@@ -9,7 +9,6 @@ package com.leo.jtengine.visualiserapp.states;
 import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.utils.Audio;
 import com.leo.jtengine.utils.Color;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.visualiserapp.AlgorithmVisualiser;
 import com.leo.jtengine.visualiserapp.algorithms.maze.MazeCell;
 import com.leo.jtengine.visualiserapp.algorithms.maze.MazeGenerator;
@@ -39,14 +38,14 @@ public class MazeState extends AlgorithmVisualiserState {
     public boolean keyDown(Keyboard key) {
         switch (key) {
             case ESC:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
                 if (mazeAlgorithm.isStarted()) {
                     mazeAlgorithm.stop();
                 }
                 getAlgorithmVisualiser().removeFirstState();
                 break;
             case SPACE:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
                 if (mazeAlgorithm.isStarted()) {
                     mazeAlgorithm.stop();
                 }
@@ -56,7 +55,7 @@ public class MazeState extends AlgorithmVisualiserState {
                 generateEmptyMaze();
                 break;
             case ENTER:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
                 if (!mazeAlgorithm.isStarted()) {
                     new Thread(mazeAlgorithm).start();
                 } else {
@@ -65,13 +64,13 @@ public class MazeState extends AlgorithmVisualiserState {
                 break;
             case LEFT:
                 if (mazeAlgorithm.decreaseSpeed()) {
-                    Terminal.bip(Audio.MENU_CLICK);
+                    getTerminal().bip(Audio.MENU_CLICK);
                 }
                 break;
             case RIGHT:
 
                 if (mazeAlgorithm.increaseSpeed()) {
-                    Terminal.bip(Audio.MENU_CLICK);
+                    getTerminal().bip(Audio.MENU_CLICK);
                 }
                 break;
             default:
@@ -119,16 +118,16 @@ public class MazeState extends AlgorithmVisualiserState {
         getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 1, j * 3 + 2), color, 1);
     }
 
+    private void updateCorners(int i, int j) {
+        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Color.DARK_GREY, 1);
+    }
+
     private Color getWallColor(boolean hasWall) {
         Color color = Color.WHITE;
         if (hasWall) {
             color = Color.DARK_GREY;
         }
         return color;
-    }
-
-    private void updateCorners(int i, int j) {
-        getCanvas().requestPixelChange(new DiscreteCoordinates(i * 3 + 2, j * 3 + 2), Color.DARK_GREY, 1);
     }
 
     @Override

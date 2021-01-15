@@ -6,97 +6,35 @@
 
 package com.leo.jtengine.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import com.leo.jtengine.Graphics;
+import com.leo.jtengine.window.Window;
+
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
-public class Terminal {
+public class Terminal implements Graphics {
     private static final int W = 1;
     private static final int H = 0;
-    private static Logger logger;
-    private static final String FILENAME = "logs.log";
-    private static FileHandler fh = null;
-    private static int initWidth = 0;
-    private static int initHeight = 0;
-    private static int width = 0;
-    private static int height = 0;
-
-    private static final PrintWriter printWriter = new PrintWriter(
+    private final PrintWriter printWriter = new PrintWriter(
             new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), 512));
+    private final Window window;
 
-    private Terminal() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    public static void clearLogs() {
-        if (fh != null) {
-            fh.close();
+    public Terminal(Window window) {
+        this.window = window;
+        if (window.isFullScreen()) {
+            setFullScreen();
+        } else if (window.getWidth() != 0 && window.getHeight() != 0) {
+            setSize(window.getWidth(), window.getHeight());
         }
-        logger = null;
-        initLogger();
+        init();
     }
 
-    public static void log(String log) {
-        initLogger();
-        logger.info(log);
+    public Window getWindow() {
+        return window;
     }
 
-    public static void logErr(Exception e, String message) {
-        initLogger();
-        logger.log(Level.SEVERE, message, e);
-    }
-
-    public static void logErr(String message) {
-        initLogger();
-        logger.log(Level.SEVERE, message);
-    }
-
-    public static void logErr(Exception e) {
-        logErr(e, "");
-    }
-
-    private static void initLogger() {
-        if (logger == null) {
-            logger = Logger.getLogger("MYLOG");
-            try {
-                fh = new FileHandler(FILENAME);
-                // This block configure the logger with handler and formatter
-                logger.addHandler(fh);
-                SimpleFormatter formatter = new SimpleFormatter();
-                fh.setFormatter(formatter);
-                logger.setUseParentHandlers(false);
-            } catch (SecurityException | IOException e) {
-                logErr(e);
-            }
-        }
-
-    }
-
-    public static void redirectErr() {
-        System.setErr(new LoggerPrintStream(System.err));
-    }
-
-    public static void write(String str) {
-        printWriter.write(str);
-    }
-
-    public static void flush() {
-        printWriter.flush();
-    }
-
-    public static void init() {
+    private void init() {
         switchProfile("HighPerformance");
         enableRawInput();
         saveState();
@@ -104,20 +42,82 @@ public class Terminal {
         clear();
     }
 
-    public static void close() {
+    public void close() {
         switchProfile("Default");
         resetCursorPos();
         showCursor();
         disableRawInput();
         restoreState();
+        printWriter.close();
     }
 
-    public static void resetCursorPos() {
-        write("\033[1000F\033[1E");
+    public void clear() {
+        write("\033[2J");
+    }
+
+    private void hideCursor() {
+        write("\033[?25l");
         flush();
     }
 
-    public static int[] getSize() {
+    private void showCursor() {
+        write("\033[?25h");
+        flush();
+    }
+
+    private void switchProfile(String profile) {
+        write("\033]50;SetProfile=" + profile + "\007");
+    }
+
+    private void enableRawInput() {
+        executeCmd("stty raw -echo </dev/tty");
+    }
+
+    private void disableRawInput() {
+        executeCmd("stty -raw echo </dev/tty");
+    }
+
+    private void saveState() {
+        int[] size = getSize();
+        window.setWidth(size[W]);
+        window.setHeight(size[H]);
+        window.setInitWidth(window.getWidth());
+        window.setInitHeight(window.getHeight());
+        executeCmd("tput smcup");
+    }
+
+    private void restoreState() {
+        executeCmd("tput rmcup");
+        if (window.getInitWidth() > 0 && window.getInitHeight() > 0) {
+            setSize(window.getInitWidth(), window.getInitHeight());
+        }
+    }
+
+    private void setFullScreen() {
+        setSize(2000, 2000);
+        moveToTopLeft();
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            TerminalLogger.logErr(e);
+            Thread.currentThread().interrupt();
+        }
+        int[] newSize = getSize();
+        window.setWidth(newSize[W]);
+        window.setHeight(newSize[H]);
+    }
+
+    private void setSize(int width, int height) {
+        write("\033[8;" + (height + 1) + ";" + width + "t");
+        flush();
+    }
+
+    private void moveToTopLeft() {
+        write("\033[3;0;0t");
+        flush();
+    }
+
+    private int[] getSize() {
         // save cursor position
         // move to col 5000 row 5000
         // request cursor position
@@ -134,99 +134,21 @@ public class Terminal {
             size[H] -= 1;
             return size;
         } catch (NumberFormatException e) {
-            return new int[] {height, width};
+            return new int[]{window.getHeight(), window.getWidth()};
         }
     }
 
-    private static void saveInitSize() {
-        int[] initSize = getSize();
-        initWidth = initSize[W];
-        initHeight = initSize[H];
-        width = initWidth;
-        height = initHeight;
-    }
-
-    public static void setSize(int width, int height) {
-        write("\033[8;" + (height + 1) + ";" + width + "t");
-        flush();
-    }
-
-    public static void clear() {
-        executeCmd("clear");
-    }
-
-    public static void moveToTopLeft() {
-        write("\033[3;0;0t");
-        flush();
-    }
-
-    private static void hideCursor() {
-        write("\033[?25l");
-        flush();
-    }
-
-    private static void showCursor() {
-        write("\033[?25h");
-        flush();
-    }
-
-    private static void switchProfile(String profile) {
-        write("\033]50;SetProfile=" + profile + "\007");
-    }
-
-    private static void enableRawInput() {
-        executeCmd("stty raw -echo </dev/tty");
-    }
-
-    private static void disableRawInput() {
-        executeCmd("stty -raw echo </dev/tty");
-    }
-
-    private static void saveState() {
-        saveInitSize();
-        executeCmd("tput smcup");
-    }
-
-    private static void restoreState() {
-        executeCmd("tput rmcup");
-        if (initWidth > 0 && initHeight > 0) {
-            setSize(initWidth, initHeight);
-        }
-    }
-
-    public static void setFullScreen() {
-        setSize(2000, 2000);
-        moveToTopLeft();
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            logErr(e);
-            Thread.currentThread().interrupt();
-        }
-        int[] newSize = getSize();
-        width = newSize[W];
-        height = newSize[H];
-    }
-
-    public static int getWidth() {
-        return width;
-    }
-
-    public static int getHeight() {
-        return height;
-    }
-
-    public static void bip(Audio audio) {
+    public void bip(Audio audio) {
         new Thread(() -> executeCmd("afplay bin/sounds/" + audio.filename)).start();
     }
 
-    public static void executeCmd(String command) {
+    public void executeCmd(String command) {
         ProcessBuilder p = new ProcessBuilder("/bin/bash", "-c", command);
         Process p2 = null;
         try {
             p2 = p.start();
         } catch (IOException e) {
-            logErr(e, "Could not execute command: " + command);
+            TerminalLogger.logErr(e, "Could not execute command: " + command);
             Thread.currentThread().interrupt();
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(p2.getInputStream()));
@@ -238,19 +160,26 @@ public class Terminal {
                     break;
                 }
             } catch (IOException e) {
-                logErr(e);
+                TerminalLogger.logErr(e);
             }
             write(line);
             flush();
         }
     }
 
-    public static void writePID() {
+    public void write(String str) {
+        printWriter.write(str);
+    }
+
+    public void flush() {
+        printWriter.flush();
+    }
+
+    public void writePID() {
         // Use the engine management bean in java to find out the pid
         // and to write to a file
-
         String pid = ManagementFactory.getRuntimeMXBean().getName();
-        if (pid.indexOf("@") != -1) {
+        if (pid.contains("@")) {
             pid = pid.substring(0, pid.indexOf("@"));
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("app.pid"))) {
@@ -258,8 +187,18 @@ public class Terminal {
             writer.newLine();
             writer.flush();
         } catch (IOException e) {
-            logErr(e);
+            TerminalLogger.logErr(e);
         }
+    }
+
+    @Override
+    public void render() {
+        resetCursorPos();
+    }
+
+    private void resetCursorPos() {
+        write("\033[1000F\033[1E");
+        flush();
     }
 
 }
@@ -272,7 +211,7 @@ class LoggerPrintStream extends PrintStream {
 
     @Override
     public void print(String s) {
-        Terminal.logErr(s);
+        TerminalLogger.logErr(s);
         super.print("");
     }
 }

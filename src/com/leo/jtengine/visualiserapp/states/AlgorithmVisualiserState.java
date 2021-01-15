@@ -12,7 +12,7 @@ import com.leo.jtengine.visualiserapp.AlgorithmVisualiser;
 
 public abstract class AlgorithmVisualiserState extends State {
 
-    private AlgorithmVisualiser algorithmVisualiser;
+    private final AlgorithmVisualiser algorithmVisualiser;
 
     protected AlgorithmVisualiserState(AlgorithmVisualiser algorithmVisualiser) {
         super(algorithmVisualiser);

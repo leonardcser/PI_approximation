@@ -20,23 +20,7 @@ public final class DiscreteCoordinates {
         this.y = y;
     }
 
-    public DiscreteCoordinates left(){
-        return new DiscreteCoordinates(x-1, y);
-    }
-
-    public DiscreteCoordinates right(){
-        return new DiscreteCoordinates(x+1, y);
-    }
-
-    public DiscreteCoordinates up(){
-        return new DiscreteCoordinates(x, y+1);
-    }
-
-    public DiscreteCoordinates down(){
-        return new DiscreteCoordinates(x, y-1);
-    }
-    
-    public List<DiscreteCoordinates> getNeighbours(){
+    public List<DiscreteCoordinates> getNeighbours() {
         List<DiscreteCoordinates> result = new ArrayList<>();
         result.add(left());
         result.add(up());
@@ -45,16 +29,33 @@ public final class DiscreteCoordinates {
         return result;
     }
 
-    public DiscreteCoordinates opposite(){
-        return new DiscreteCoordinates(x*(-1), y*(-1));
+    public DiscreteCoordinates left() {
+        return new DiscreteCoordinates(x - 1, y);
     }
 
-    public DiscreteCoordinates jump(int dx, int dy){
-        return new DiscreteCoordinates(x+dx, y+dy);
+    public DiscreteCoordinates up() {
+        return new DiscreteCoordinates(x, y + 1);
     }
 
-    public float manhattanDist(DiscreteCoordinates other){
-        return (float) Math.sqrt((this.x-other.x)*(this.x-other.x) + (float) (this.y-other.y)*(this.y-other.y));
+    public DiscreteCoordinates right() {
+        return new DiscreteCoordinates(x + 1, y);
+    }
+
+    public DiscreteCoordinates down() {
+        return new DiscreteCoordinates(x, y - 1);
+    }
+
+    public DiscreteCoordinates opposite() {
+        return new DiscreteCoordinates(x * (-1), y * (-1));
+    }
+
+    public DiscreteCoordinates jump(int dx, int dy) {
+        return new DiscreteCoordinates(x + dx, y + dy);
+    }
+
+    public float manhattanDist(DiscreteCoordinates other) {
+        return (float) Math
+                .sqrt((this.x - other.x) * (this.x - other.x) + (float) (this.y - other.y) * (this.y - other.y));
     }
 
     @Override
@@ -64,16 +65,16 @@ public final class DiscreteCoordinates {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof DiscreteCoordinates))
+        if (!(object instanceof DiscreteCoordinates)) {
             return false;
-        else {
-            DiscreteCoordinates other = (DiscreteCoordinates)object;
+        } else {
+            DiscreteCoordinates other = (DiscreteCoordinates) object;
             return x == other.x && y == other.y;
         }
     }
 
     @Override
     public String toString() {
-        return "(x: "+ x +", y: "+ y +")";
+        return "(x: " + x + ", y: " + y + ")";
     }
 }

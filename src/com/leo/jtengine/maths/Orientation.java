@@ -8,7 +8,7 @@ public enum Orientation {
 
     public final DiscreteCoordinates coord;
 
-    private Orientation(DiscreteCoordinates coordinates) {
+    Orientation(DiscreteCoordinates coordinates) {
         coord = coordinates;
     }
 

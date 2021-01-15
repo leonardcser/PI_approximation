@@ -1,11 +1,13 @@
 /**
- *  Author:     Leonard Cseres
- *  Date:       Fri Jan 08 2021
- *  Time:       15:27:23
+ * Author:     Leonard Cseres
+ * Date:       Fri Jan 08 2021
+ * Time:       15:27:23
  */
 
- 
+
 package com.leo.jtengine.io;
+
+import com.leo.jtengine.utils.TerminalLogger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,19 +15,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leo.jtengine.utils.Terminal;
-
 public class AsciiFileReader {
+    private static final String[] FILE_NOT_FOUND = new String[]{"Ascii not found :("};
     private final String filename;
     private String[] fileContent;
-    private static final String[] FILE_NOT_FOUND = new String[]{"Ascii not found :("};
 
     public AsciiFileReader(String filename) {
         this.filename = filename;
         try {
             readFile();
         } catch (IOException e) {
-            Terminal.logErr(e);
+            TerminalLogger.logErr(e);
             fileContent = FILE_NOT_FOUND;
         }
     }

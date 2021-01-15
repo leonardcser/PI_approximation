@@ -10,15 +10,20 @@ import com.leo.jtengine.Application;
 import com.leo.jtengine.Listener;
 import com.leo.jtengine.Terminatable;
 import com.leo.jtengine.Updatable;
+import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.window.Canvas;
 import com.leo.jtengine.window.Window;
 
 public abstract class State implements Updatable, Listener, Terminatable {
 
-    private Application application;
+    private final Application application;
 
     protected State(Application application) {
         this.application = application;
+    }
+
+    public Terminal getTerminal() {
+        return application.getTerminal();
     }
 
     public Window getWindow() {
@@ -28,5 +33,6 @@ public abstract class State implements Updatable, Listener, Terminatable {
     public Canvas getCanvas() {
         return application.getCanvas();
     }
+
 
 }

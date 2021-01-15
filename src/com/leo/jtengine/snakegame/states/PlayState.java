@@ -1,17 +1,10 @@
 /**
- *  Author:     Leonard Cseres
- *  Date:       Fri Jan 08 2021
- *  Time:       15:36:10
+ * Author:     Leonard Cseres
+ * Date:       Fri Jan 08 2021
+ * Time:       15:36:10
  */
 
 package com.leo.jtengine.snakegame.states;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 import com.leo.jtengine.graphics.TextGraphics;
 import com.leo.jtengine.maths.DiscreteCoordinates;
@@ -19,8 +12,9 @@ import com.leo.jtengine.maths.Orientation;
 import com.leo.jtengine.snakegame.SnakeGame;
 import com.leo.jtengine.utils.Audio;
 import com.leo.jtengine.utils.Color;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.window.Keyboard;
+
+import java.util.*;
 
 public class PlayState extends SnakeGameState {
     private static final int DEATH_TIMEOUT = 60;
@@ -29,8 +23,10 @@ public class PlayState extends SnakeGameState {
     private final Random random = new Random();
     private final DiscreteCoordinates spawnCoordinates;
     private final Deque<List<DiscreteCoordinates>> snake = new ArrayDeque<>();
+    private final TextGraphics scoreText;
+    private final TextGraphics highScoreText;
+    private final Deque<Orientation> desiredOrientations = new ArrayDeque<>();
     private Orientation currentOrientation = null;
-    private Deque<Orientation> desiredOrientations = new ArrayDeque<>();
     private List<DiscreteCoordinates> foodPosition = new ArrayList<>();
     private int frameCount = 0;
     private int timeoutCount = 0;
@@ -38,9 +34,7 @@ public class PlayState extends SnakeGameState {
     private boolean isFoodEaten = false;
     private int foodLengthCouter = 0;
     private int snakeLength = 0;
-    private int hightscore = 0;
-    private final TextGraphics scoreText;
-    private final TextGraphics highScoreText;
+    private int highScore = 0;
 
     public PlayState(SnakeGame snakegame) {
         super(snakegame);
@@ -50,7 +44,8 @@ public class PlayState extends SnakeGameState {
         snake.push(getOccupationList(spawnCoordinates));
         scoreText = new TextGraphics(getCanvas(), new DiscreteCoordinates(1, getCanvas().getHeight() - 2), "Score: 0");
         highScoreText = new TextGraphics(getCanvas(),
-                new DiscreteCoordinates(getCanvas().getWidth() - 16, getCanvas().getHeight() - 2), "");
+                                         new DiscreteCoordinates(getCanvas().getWidth() - 16,
+                                                                 getCanvas().getHeight() - 2), "");
         placeRandomFood();
     }
 
@@ -64,6 +59,13 @@ public class PlayState extends SnakeGameState {
         return toReturn;
     }
 
+    private void placeRandomFood() {
+        List<DiscreteCoordinates> emptyCoords = getEmptyCoordinates();
+
+        DiscreteCoordinates randCoord = emptyCoords.get(random.nextInt(emptyCoords.size()));
+        foodPosition = getOccupationList(randCoord);
+    }
+
     private List<DiscreteCoordinates> getEmptyCoordinates() {
         List<DiscreteCoordinates> emptyCoords = new ArrayList<>();
         for (int x = 2; x < getCanvas().getWidth() - 3; x += 2) {
@@ -73,6 +75,7 @@ public class PlayState extends SnakeGameState {
                 for (List<DiscreteCoordinates> snakeCoord : snake) {
                     if (snakeCoord.contains(coord)) {
                         isEmpty = false;
+                        break;
                     }
                 }
                 if (isEmpty) {
@@ -85,33 +88,11 @@ public class PlayState extends SnakeGameState {
         return emptyCoords;
     }
 
-    private void placeRandomFood() {
-        List<DiscreteCoordinates> emptyCoords = getEmptyCoordinates();
-
-        DiscreteCoordinates randCoord = emptyCoords.get(random.nextInt(emptyCoords.size()));
-        foodPosition = getOccupationList(randCoord);
-    }
-
-    private void reset() {
-        if (snakeLength > hightscore) {
-            hightscore = snakeLength;
-            highScoreText.setText("High Score: " + hightscore);
-        }
-        snakeLength = 0;
-        scoreText.setText("Score: 0");
-        snake.clear();
-        snake.push(getOccupationList(spawnCoordinates));
-        desiredOrientations.clear();
-        ;
-        currentOrientation = null;
-        placeRandomFood();
-    }
-
     @Override
     public boolean keyDown(Keyboard key) {
         switch (key) {
             case ESC:
-                Terminal.bip(Audio.MENU_CLICK);
+                getTerminal().bip(Audio.MENU_CLICK);
                 super.getSnakeGame().end();
                 break;
             case UP:
@@ -201,7 +182,7 @@ public class PlayState extends SnakeGameState {
         for (int x = 0; x < getCanvas().getWidth(); ++x) {
             getCanvas().requestPixelChange(new DiscreteCoordinates(x, 0), Color.WHITE, 10);
             getCanvas().requestPixelChange(new DiscreteCoordinates(x, getCanvas().getHeight() * 2 - 7), Color.WHITE,
-                    10);
+                                           10);
         }
         for (int y = 0; y < getCanvas().getHeight() * 2 - 7; ++y) {
             getCanvas().requestPixelChange(new DiscreteCoordinates(0, y), Color.WHITE, 10);
@@ -227,18 +208,6 @@ public class PlayState extends SnakeGameState {
 
         scoreText.update();
         highScoreText.update();
-    }
-
-    private int countHeadMatches(List<DiscreteCoordinates> coords) {
-        int count = 0;
-        for (DiscreteCoordinates coord : coords) {
-            if (snake.peek().contains(coord)) {
-                ++count;
-            }
-        }
-
-        return count;
-
     }
 
     private void moveSnake() {
@@ -268,6 +237,32 @@ public class PlayState extends SnakeGameState {
                 isDead = true;
             }
         }
+    }
+
+    private int countHeadMatches(List<DiscreteCoordinates> coords) {
+        int count = 0;
+        for (DiscreteCoordinates coord : coords) {
+            if (snake.peek().contains(coord)) {
+                ++count;
+            }
+        }
+
+        return count;
+
+    }
+
+    private void reset() {
+        if (snakeLength > highScore) {
+            highScore = snakeLength;
+            highScoreText.setText("High Score: " + highScore);
+        }
+        snakeLength = 0;
+        scoreText.setText("Score: 0");
+        snake.clear();
+        snake.push(getOccupationList(spawnCoordinates));
+        desiredOrientations.clear();
+        currentOrientation = null;
+        placeRandomFood();
     }
 
     @Override

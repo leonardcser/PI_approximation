@@ -6,10 +6,10 @@
 
 package com.leo.jtengine.visualiserapp.algorithms.sorting;
 
-import java.util.Arrays;
-
 import com.leo.jtengine.utils.Color;
-import com.leo.jtengine.utils.Terminal;
+import com.leo.jtengine.utils.TerminalLogger;
+
+import java.util.Arrays;
 
 public abstract class Sort implements Runnable {
     private int sortSleepTime = 21;
@@ -91,7 +91,7 @@ public abstract class Sort implements Runnable {
             try {
                 Thread.sleep(sortSleepTime);
             } catch (InterruptedException e) {
-                Terminal.logErr(e);
+                TerminalLogger.logErr(e);
                 Thread.currentThread().interrupt();
             }
             int tmp = arr[initIndex];
