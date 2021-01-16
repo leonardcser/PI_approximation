@@ -4,14 +4,13 @@
  *	Time:        18:14
  */
 
-package com.leo.jtengine.window;
+package com.leo.jtengine.window.render;
 
 import com.leo.jtengine.Graphics;
 import com.leo.jtengine.Updatable;
 import com.leo.jtengine.maths.DiscreteCoordinates;
-import com.leo.jtengine.utils.Color;
 import com.leo.jtengine.utils.TerminalLogger;
-import com.leo.jtengine.window.Cell.Pixel;
+import com.leo.jtengine.window.render.Cell.Pixel;
 
 import java.util.*;
 
@@ -46,15 +45,15 @@ public class Canvas implements Updatable, Graphics {
     }
 
     public int getHeight() {
-        return canvas.length;
+        return height;
     }
 
     public int getPixelHeight() {
-        return canvas.length * 2;
+        return height * 2;
     }
 
     public int getWidth() {
-        return canvas[0].length;
+        return width;
     }
 
     public Cell getCell(DiscreteCoordinates coor) {
@@ -177,17 +176,17 @@ public class Canvas implements Updatable, Graphics {
                 }
                 buffer.append(cell.getChar());
                 if (cell.hasColor()) {
-                    buffer.append(Color.RESET.value);
+                    buffer.append(Color.RESET);
                 }
             }
             // Carriage return
-            buffer.append("\033[1E");
+            buffer.append(XtermUtils.moveDownAtStart(1));
         }
 
         if (!buffer.toString().equals(tmpBuffer)) {
             String deletedChars = cleanBuffer(tmpBuffer);
 
-            terminal.write(buffer.toString() + Color.RESET.value);
+            terminal.write(buffer.toString() + Color.RESET);
             terminal.flush();
             clearCanvas();
             buffer.append(deletedChars);

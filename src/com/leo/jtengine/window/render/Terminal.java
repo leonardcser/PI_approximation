@@ -4,9 +4,10 @@
  *	Time:        16:00
  */
 
-package com.leo.jtengine.window;
+package com.leo.jtengine.window.render;
 
 import com.leo.jtengine.Graphics;
+import com.leo.jtengine.window.Window;
 import com.leo.jtengine.utils.Audio;
 import com.leo.jtengine.utils.TerminalLogger;
 
@@ -53,21 +54,21 @@ public class Terminal implements Graphics {
     }
 
     public void clear() {
-        write("\033[2J");
+        write(XtermUtils.CLEAR_SCREEN);
     }
 
     private void hideCursor() {
-        write("\033[?25l");
+        write(XtermUtils.HIDE_CURSOR);
         flush();
     }
 
     private void showCursor() {
-        write("\033[?25h");
+        write(XtermUtils.SHOW_CURSOR);
         flush();
     }
 
     private void switchProfile(String profile) {
-        write("\033]50;SetProfile=" + profile + "\007");
+        write(XtermUtils.setProfile(profile));
     }
 
     private void enableRawInput() {
@@ -99,33 +100,45 @@ public class Terminal implements Graphics {
     private void setFullScreen() {
         setSize(2000, 2000);
         moveToTopLeft();
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            TerminalLogger.logErr(e);
-            Thread.currentThread().interrupt();
-        }
+        sleep(10);
         int[] newSize = getSize();
         window.setWidth(newSize[W]);
         window.setHeight(newSize[H]);
     }
 
+    public static void sleep(int millis) {
+        sleep(millis, Thread.currentThread());
+    }
+
+    public static void sleep(int millis, Thread thread) {
+        try {
+            thread.sleep(millis);
+        } catch (InterruptedException e) {
+            TerminalLogger.logErr(e);
+            thread.interrupt();
+        }
+    }
+
     private void setSize(int width, int height) {
-        write("\033[8;" + (height + 1) + ";" + width + "t");
+        write(XtermUtils.resizeWindow(width, height + 1));
         flush();
     }
 
     private void moveToTopLeft() {
-        write("\033[3;0;0t");
+        write(XtermUtils.moveWindow(0, 0));
         flush();
     }
+
+    public void setTitle(String title) {
+        executeCmd("printf '" + XtermUtils.setTitle(title) + "'");
+	}
 
     private int[] getSize() {
         // save cursor position
         // move to col 5000 row 5000
         // request cursor position
         // restore cursor position
-        write("\033[s\033[5000;5000H\033[6n\033[u");
+        write(XtermUtils.SAVE_CURSOR_POS + XtermUtils.moveCursor(2000, 2000) + XtermUtils.REQUEST_CURSOR_POS + XtermUtils.RESTORE_CURSOR_POS);
         flush();
         String inputClean = System.console().readLine().replaceAll("[^0-9;]", "");
         String[] strSize = inputClean.split(";");
@@ -200,8 +213,10 @@ public class Terminal implements Graphics {
     }
 
     private void resetCursorPos() {
-        write("\033[1000F\033[1E");
+        write(XtermUtils.moveUpAtStart(2000) + XtermUtils.moveDownAtStart(1));
         flush();
     }
+
+	
 
 }

@@ -10,9 +10,9 @@ import com.leo.jtengine.Application;
 import com.leo.jtengine.Listener;
 import com.leo.jtengine.Terminatable;
 import com.leo.jtengine.Updatable;
-import com.leo.jtengine.window.Terminal;
-import com.leo.jtengine.window.Canvas;
 import com.leo.jtengine.window.Window;
+import com.leo.jtengine.window.render.Canvas;
+import com.leo.jtengine.window.render.Terminal;
 
 public abstract class State implements Updatable, Listener, Terminatable {
 

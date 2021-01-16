@@ -4,10 +4,9 @@
  *	Time:        22:30
  */
 
-package com.leo.jtengine.window;
+package com.leo.jtengine.window.render;
 
 import com.leo.jtengine.maths.DiscreteCoordinates;
-import com.leo.jtengine.utils.Color;
 
 public class Cell {
     public final DiscreteCoordinates coordinate;
@@ -34,14 +33,14 @@ public class Cell {
 
     public String getForground() {
         if (hasForground()) {
-            return pixel.forground.value;
+            return pixel.forground.toString();
         }
         return "";
     }
 
     public String getBackground() {
         if (hasBackground()) {
-            return pixel.background.value.replaceFirst("38", "48");
+            return pixel.background.toString().replaceFirst("38", "48");
         }
         return "";
     }

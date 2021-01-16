@@ -93,7 +93,7 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
         if (System.currentTimeMillis() > nextStatTime) {
             // TerminalLogger.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             // Set title to fps
-            application.getTerminal().executeCmd("printf '\033]2;" + "Fps:" + fpsCounter + "\u0007'");
+            application.getTerminal().setTitle("Fps:" + fpsCounter);
             fpsCounter = 0;
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;

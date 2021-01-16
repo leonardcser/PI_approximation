@@ -9,9 +9,9 @@ package com.leo.jtengine.graphics;
 
 import com.leo.jtengine.Updatable;
 import com.leo.jtengine.maths.DiscreteCoordinates;
-import com.leo.jtengine.utils.Color;
-import com.leo.jtengine.window.Canvas;
-import com.leo.jtengine.window.Cell;
+import com.leo.jtengine.window.render.Canvas;
+import com.leo.jtengine.window.render.Cell;
+import com.leo.jtengine.window.render.Color;
 
 public class TextGraphics implements Updatable {
     private final int priority = 10;
