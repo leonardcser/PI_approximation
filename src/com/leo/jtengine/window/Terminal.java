@@ -4,10 +4,11 @@
  *	Time:        16:00
  */
 
-package com.leo.jtengine.utils;
+package com.leo.jtengine.window;
 
 import com.leo.jtengine.Graphics;
-import com.leo.jtengine.window.Window;
+import com.leo.jtengine.utils.Audio;
+import com.leo.jtengine.utils.TerminalLogger;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -78,13 +79,13 @@ public class Terminal implements Graphics {
     }
 
     private void saveState() {
+        int[] size = getSize();
         if (window.getWidth() == 0 && window.getHeight() == 0) {
-            int[] size = getSize();
             window.setWidth(size[W]);
             window.setHeight(size[H]);
         }
-        window.setInitWidth(window.getWidth());
-        window.setInitHeight(window.getHeight());
+        window.setInitWidth(size[W]);
+        window.setInitHeight(size[H]);
         executeCmd("tput smcup");
     }
 
@@ -141,7 +142,7 @@ public class Terminal implements Graphics {
     }
 
     public void bip(Audio audio) {
-        new Thread(() -> executeCmd("afplay bin/sounds/" + audio.filename)).start();
+        new Thread(() -> executeCmd("afplay sounds/" + audio.filename)).start();
     }
 
     public void executeCmd(String command) {
@@ -177,7 +178,7 @@ public class Terminal implements Graphics {
         printWriter.flush();
     }
 
-    public void writePID() {
+    protected void writePID() {
         // Use the engine management bean in java to find out the pid
         // and to write to a file
         String pid = ManagementFactory.getRuntimeMXBean().getName();
@@ -203,17 +204,4 @@ public class Terminal implements Graphics {
         flush();
     }
 
-}
-
-class LoggerPrintStream extends PrintStream {
-
-    public LoggerPrintStream(OutputStream out) {
-        super(out, true);
-    }
-
-    @Override
-    public void print(String s) {
-        TerminalLogger.logErr(s);
-        super.print("");
-    }
 }

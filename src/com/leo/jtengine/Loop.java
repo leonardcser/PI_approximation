@@ -91,7 +91,7 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            TerminalLogger.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            // TerminalLogger.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
             // Set title to fps
             application.getTerminal().executeCmd("printf '\033]2;" + "Fps:" + fpsCounter + "\u0007'");
             fpsCounter = 0;

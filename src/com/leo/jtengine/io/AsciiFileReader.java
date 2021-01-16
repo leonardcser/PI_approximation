@@ -32,7 +32,7 @@ public class AsciiFileReader {
 
     private void readFile() throws IOException {
         List<String> content = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("./bin/art/" + filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("./art/" + filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 content.add(line);

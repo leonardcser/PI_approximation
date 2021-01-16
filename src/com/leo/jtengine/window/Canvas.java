@@ -10,7 +10,6 @@ import com.leo.jtengine.Graphics;
 import com.leo.jtengine.Updatable;
 import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.utils.Color;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.utils.TerminalLogger;
 import com.leo.jtengine.window.Cell.Pixel;
 

@@ -7,9 +7,9 @@
 package com.leo.jtengine;
 
 import com.leo.jtengine.states.State;
-import com.leo.jtengine.utils.Terminal;
 import com.leo.jtengine.window.Canvas;
 import com.leo.jtengine.window.Keyboard;
+import com.leo.jtengine.window.Terminal;
 import com.leo.jtengine.window.Window;
 
 import java.util.ArrayDeque;

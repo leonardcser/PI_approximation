@@ -4,10 +4,11 @@
  *	Time:        22:44
  */
 
-
 package com.leo.jtengine.utils;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,5 +69,18 @@ public class TerminalLogger {
 
     public static void redirectErr() {
         System.setErr(new LoggerPrintStream(System.err));
+    }
+}
+
+class LoggerPrintStream extends PrintStream {
+
+    public LoggerPrintStream(OutputStream out) {
+        super(out, true);
+    }
+
+    @Override
+    public void print(String s) {
+        TerminalLogger.logErr(s);
+        super.print("");
     }
 }
