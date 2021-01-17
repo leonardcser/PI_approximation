@@ -5,6 +5,7 @@
 
 ## Contents
 
+- [Goal](#goal)
 - [Features](#features)
 - [Todo](#todo)
 - [Cells vs Pixels](#cells-vs-pixels)
@@ -12,23 +13,34 @@
 - [Demos](#demos)
 - [Contribution](#contribution)
 
+<a name="goal"></a>
+## Goal
+The main goal of this library is to create a easy and fun way to learn to code in Java. Concepts vary from package managment, to game structure, events and algorithms.
+
 <a name="features"></a>
 ## Features
-- Keyboard input
+- Keyboard events
+- Mouse hover events
+- Mouse click events
 - Sound
 - Custom sized window
-- Fullscreen
+- Fullscreen mode
 - Terminal state save and restore
 - System.err logger
-- Optimised System.out.print()
+- Smart System.out.print()
 - Custom colors for Cells
 - Custom colors for Pixels
 - And much more customisation...
 
 <a name="todo"></a>
 ## Todo
-- [ ] add java doc  
-- [ ] simplify use  
+- [ ] create Youtube series how to use
+- [ ] add java doc
+- [ ] simplify use
+- [ ] add areas
+- [ ] add sprites
+- [ ] add simple geometric shapes  
+- [ ] optimizse performance  
 ...
 
 <a name="cells-vs-pixels"></a>
@@ -61,14 +73,8 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 
 <a name="demo"></a>
 ## Demos
-Check out [/visualiserapp](src/com/leo/application/visualiserapp) and [/snakegame](src/com/leo/application/snakegame). These are for now only proofs of concept and the code is not perfect neither optimised.
+Check out [jTengine Demo](https://github.com/leonardcser/jtenginedemo) repo.
 
-### Visualiser App
-![menuAlgorithms](res/demo/menuAlgorithms.png)
-![quickSort](res/demo/quickSort.png)
-![maze](res/demo/maze.png)
-### Snake Game
-![snake](res/demo/snake.png)
 
 <a name="contribution"></a>
 ## Contribution
