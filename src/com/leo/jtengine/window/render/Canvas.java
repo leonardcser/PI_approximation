@@ -180,7 +180,7 @@ public class Canvas implements Updatable, Graphics {
                 }
             }
             // Carriage return
-            buffer.append(XtermUtils.moveDownAtStart(1));
+            buffer.append(Xterm.moveDownAtStart(1));
         }
 
         if (!buffer.toString().equals(tmpBuffer)) {

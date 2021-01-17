@@ -6,7 +6,9 @@
 
 package com.leo.jtengine;
 
+import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.states.State;
+import com.leo.jtengine.utils.TerminalLogger;
 import com.leo.jtengine.window.Keyboard;
 import com.leo.jtengine.window.Window;
 import com.leo.jtengine.window.render.Canvas;
@@ -57,6 +59,17 @@ public abstract class Application implements Updatable, Graphics, Listener, Term
     @Override
     public boolean keyDown(Keyboard key) {
         return states.peekFirst().keyDown(key);
+    }
+
+    @Override
+    public boolean mouseHover(DiscreteCoordinates hover) {
+        return states.peekFirst().mouseHover(hover);
+
+    }
+
+    @Override
+    public boolean mouseClick(DiscreteCoordinates click) {
+        return states.peekFirst().mouseClick(click);
     }
 
     @Override

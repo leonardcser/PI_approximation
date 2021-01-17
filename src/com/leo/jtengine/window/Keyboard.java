@@ -40,13 +40,13 @@ public enum Keyboard {
     RIGHT(new Integer[]{27,91,67}),
     LEFT(new Integer[]{27,91,68});
 
-    public Integer[] keyCode;
+    private final Integer[] keyCode;
 
     Keyboard(Integer[] keyCode) {
         this.keyCode = keyCode;
     }
 
-    public static Keyboard get(Integer[] key) {
+    protected static Keyboard get(Integer[] key) {
         for (Keyboard toCompare : Keyboard.values()) {
             if (Arrays.equals(toCompare.keyCode, key)) {
                 return toCompare;

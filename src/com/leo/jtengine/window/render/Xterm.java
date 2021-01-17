@@ -1,14 +1,18 @@
 package com.leo.jtengine.window.render;
 
-public class XtermUtils {
+public class Xterm {
     protected static final String CLEAR_SCREEN = "\033[2J";
     protected static final String HIDE_CURSOR = "\033[?25l";
     protected static final String SHOW_CURSOR = "\033[?25h";
     protected static final String SAVE_CURSOR_POS = "\033[s";
     protected static final String REQUEST_CURSOR_POS = "\033[6n";
     protected static final String RESTORE_CURSOR_POS = "\033[u";
+    protected static final String ENABLE_SCREEN_BUFFER = "\033[?1049h";
+    protected static final String DISABLE_SCREEN_BUFFER = "\033[?1049l";
+    protected static final String ENABLE_MOUSE_EVENTS = "\033[?1000;1003;1006;1015h";
+    protected static final String DISABLE_MOUSE_EVENTS = "\033[?1000;1003;1006;1015l";
     
-    private XtermUtils() {
+    private Xterm() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -40,11 +44,19 @@ public class XtermUtils {
         return String.format("\033[%dF", lines);
     }
 
-    public static String getExtendedFgColor(int id) {
+    public static String get8BitFgColor(int id) {
         return String.format("\033[38;5;%dm", id);
     }
 
-    public static String getExtendedBgColor(int id) {
+    public static String get8BitBgColor(int id) {
         return String.format("\033[48;5;%dm", id);
     }
+
+	public static String get24BitFgColor(int r, int g, int b) {
+		return String.format("\033[38;2;%d;%d;%d", r, g, b);
+    }
+    
+    public static String get24BitBgColor(int r, int g, int b) {
+		return String.format("\033[48;2;%d;%d;%d", r, g, b);
+	}
 }

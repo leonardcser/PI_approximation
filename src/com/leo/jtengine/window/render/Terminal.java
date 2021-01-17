@@ -37,38 +37,35 @@ public class Terminal implements Graphics {
     }
 
     private void init() {
-        switchProfile("HighPerformance");
         enableRawInput();
         saveState();
-        hideCursor();
+        write(Xterm.HIDE_CURSOR);
+        write(Xterm.ENABLE_MOUSE_EVENTS);
+        flush();
+        switchProfile("HighPerformance");
         clear();
     }
 
     public void close() {
         switchProfile("Default");
         resetCursorPos();
-        showCursor();
+        write(Xterm.DISABLE_MOUSE_EVENTS);
+        write(Xterm.SHOW_CURSOR);
+        flush();
         disableRawInput();
         restoreState();
         printWriter.close();
     }
 
+    
+
     public void clear() {
-        write(XtermUtils.CLEAR_SCREEN);
+        write(Xterm.CLEAR_SCREEN);
     }
 
-    private void hideCursor() {
-        write(XtermUtils.HIDE_CURSOR);
-        flush();
-    }
-
-    private void showCursor() {
-        write(XtermUtils.SHOW_CURSOR);
-        flush();
-    }
 
     private void switchProfile(String profile) {
-        write(XtermUtils.setProfile(profile));
+        write(Xterm.setProfile(profile));
     }
 
     private void enableRawInput() {
@@ -80,6 +77,8 @@ public class Terminal implements Graphics {
     }
 
     private void saveState() {
+        write(Xterm.ENABLE_SCREEN_BUFFER);
+        flush();
         int[] size = getSize();
         if (window.getWidth() == 0 && window.getHeight() == 0) {
             window.setWidth(size[W]);
@@ -87,14 +86,15 @@ public class Terminal implements Graphics {
         }
         window.setInitWidth(size[W]);
         window.setInitHeight(size[H]);
-        executeCmd("tput smcup");
+        
     }
 
     private void restoreState() {
-        executeCmd("tput rmcup");
         if (window.getInitWidth() > 0 && window.getInitHeight() > 0) {
             setSize(window.getInitWidth(), window.getInitHeight());
         }
+        write(Xterm.DISABLE_SCREEN_BUFFER);
+        flush();
     }
 
     private void setFullScreen() {
@@ -106,31 +106,18 @@ public class Terminal implements Graphics {
         window.setHeight(newSize[H]);
     }
 
-    public static void sleep(int millis) {
-        sleep(millis, Thread.currentThread());
-    }
-
-    public static void sleep(int millis, Thread thread) {
-        try {
-            thread.sleep(millis);
-        } catch (InterruptedException e) {
-            TerminalLogger.logErr(e);
-            thread.interrupt();
-        }
-    }
-
     private void setSize(int width, int height) {
-        write(XtermUtils.resizeWindow(width, height + 1));
+        write(Xterm.resizeWindow(width, height));
         flush();
     }
 
     private void moveToTopLeft() {
-        write(XtermUtils.moveWindow(0, 0));
+        write(Xterm.moveWindow(0, 0));
         flush();
     }
 
     public void setTitle(String title) {
-        executeCmd("printf '" + XtermUtils.setTitle(title) + "'");
+        executeCmd("printf '" + Xterm.setTitle(title) + "'");
 	}
 
     private int[] getSize() {
@@ -138,7 +125,8 @@ public class Terminal implements Graphics {
         // move to col 5000 row 5000
         // request cursor position
         // restore cursor position
-        write(XtermUtils.SAVE_CURSOR_POS + XtermUtils.moveCursor(2000, 2000) + XtermUtils.REQUEST_CURSOR_POS + XtermUtils.RESTORE_CURSOR_POS);
+        resetCursorPos();
+        write(Xterm.SAVE_CURSOR_POS + Xterm.moveCursor(2000, 2000) + Xterm.REQUEST_CURSOR_POS + Xterm.RESTORE_CURSOR_POS);
         flush();
         String inputClean = System.console().readLine().replaceAll("[^0-9;]", "");
         String[] strSize = inputClean.split(";");
@@ -147,7 +135,6 @@ public class Terminal implements Graphics {
             for (int i = 0; i < size.length; i++) {
                 size[i] = Integer.parseInt(strSize[i]);
             }
-            size[H] -= 1;
             return size;
         } catch (NumberFormatException e) {
             return new int[]{window.getHeight(), window.getWidth()};
@@ -213,10 +200,18 @@ public class Terminal implements Graphics {
     }
 
     private void resetCursorPos() {
-        write(XtermUtils.moveUpAtStart(2000) + XtermUtils.moveDownAtStart(1));
+        write(Xterm.moveUpAtStart(2000));
         flush();
     }
 
+    public static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            TerminalLogger.logErr(e);
+            Thread.currentThread().interrupt();
+        }
+    }
 	
 
 }

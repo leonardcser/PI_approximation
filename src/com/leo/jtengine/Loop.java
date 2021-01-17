@@ -6,21 +6,31 @@
 
 package com.leo.jtengine;
 
+import com.leo.jtengine.maths.DiscreteCoordinates;
 import com.leo.jtengine.utils.TerminalLogger;
-import com.leo.jtengine.window.KeyListener;
+import com.leo.jtengine.window.InputListener;
 import com.leo.jtengine.window.Keyboard;
 
 public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     private static final int FPS = 60;
     private final Application application;
-    private final KeyListener keyListener = new KeyListener();
+    private final InputListener keyListener = new InputListener();
     private long nextStatTime;
     private boolean isRunning = false;
 
+    private boolean showFpsTitle = false;
+    private boolean logFps = false;
     private int fpsCounter;
     private int upsCounter;
 
+    public void setShowFpsTitle(boolean showFpsTitle) {
+        this.showFpsTitle = showFpsTitle;
+    }
+
+    public void setLogFps(boolean logFps) {
+        this.logFps = logFps;
+    }
 
     public Loop(Application application) {
         TerminalLogger.redirectErr();
@@ -70,13 +80,22 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
     public void update() {
         // Check for user input
         Keyboard key = keyListener.getKey();
-        if (keyListener.hasUpdated() && key != null) {
-            if (application.keyDown(key)) {
-                keyListener.reset();
+        DiscreteCoordinates hover = keyListener.getMouseHover();
+        DiscreteCoordinates click = keyListener.getMouseClick();
+        if (keyListener.hasUpdated()) {
+            if (key != null) {
+                application.keyDown(key);
+                if (!keyListener.isPressed()) {
+                    application.keyPressed(key);
+                }
             }
-            if (!keyListener.isPressed() && application.keyPressed(key)) {
-                keyListener.reset();
+            if (hover != null) {
+                application.mouseHover(hover);
             }
+            if (click != null) {
+                application.mouseClick(click);
+            }
+            keyListener.reset();
         }
 
         application.update();
@@ -91,9 +110,13 @@ public class Loop implements Runnable, Updatable, Graphics, Terminatable {
 
     private void logStats() {
         if (System.currentTimeMillis() > nextStatTime) {
-            // TerminalLogger.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
-            // Set title to fps
-            application.getTerminal().setTitle("Fps:" + fpsCounter);
+            if (logFps) {
+                TerminalLogger.log(String.format("FPS: %d, UPS: %d", fpsCounter, upsCounter));
+            }
+            if (showFpsTitle) {
+                // Set title to fps
+                application.getTerminal().setTitle("Fps:" + fpsCounter);
+            }
             fpsCounter = 0;
             upsCounter = 0;
             nextStatTime = System.currentTimeMillis() + 1000;
