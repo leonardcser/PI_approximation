@@ -92,7 +92,7 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 
 <a name="demo"></a>
 ## Demos
-Check out examples at [jTengineDemo](https://github.com/leonardcser/jtenginedemo) repo.
+Check out the code for theses examples here: [jTengineDemo](https://github.com/leonardcser/jtenginedemo).
 
 ### Visualiser App
 ![menuAlgorithms](res/demo/menuAlgorithms.png)
