@@ -61,7 +61,7 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 ### Note
 I am currently woking on this project, so no official JAR version is avaible for the moment.  
 However, you can stay up to date by making this repo as starred and for the moment, you can download a JAR version here:
-```shell
+```console
 curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/production/jTengine.jar
 ```
 
