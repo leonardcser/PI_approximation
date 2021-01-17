@@ -66,6 +66,9 @@ However, you can stay up to date by making this repo as starred and for the mome
 curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/production/jTengine.jar
 ```
 
+### Preliminary
+1. Add JAR file to your java project
+
 ### Steps
 1. Create new package in /src
 2. Create new class overriding Application.java in this new package
