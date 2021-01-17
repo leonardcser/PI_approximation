@@ -10,7 +10,6 @@ package com.leo.jtengine.graphics;
 import com.leo.jtengine.Listener;
 import com.leo.jtengine.Updatable;
 import com.leo.jtengine.maths.DiscreteCoordinates;
-import com.leo.jtengine.utils.TerminalLogger;
 import com.leo.jtengine.window.render.Canvas;
 import com.leo.jtengine.window.render.Cell;
 import com.leo.jtengine.window.render.Color;
@@ -18,10 +17,18 @@ import com.leo.jtengine.window.render.Color;
 public class TextGraphics implements Updatable, Listener {
     private final int priority = 10;
     private final Canvas canvas;
-    private final DiscreteCoordinates coordinates;
+    private DiscreteCoordinates coordinates;
     private char[] text;
     private Color color;
 
+    public void setXCentered() {
+        coordinates = new DiscreteCoordinates((canvas.getWidth() / 2) - (text.length / 2), coordinates.y);
+    }
+
+    public void setYCentered() {
+        coordinates = new DiscreteCoordinates(coordinates.x, (canvas.getHeight() / 2) - 1);
+    }
+    
     public TextGraphics(Canvas canvas, DiscreteCoordinates coordinates, String text) {
         this(canvas, coordinates, text, null);
     }

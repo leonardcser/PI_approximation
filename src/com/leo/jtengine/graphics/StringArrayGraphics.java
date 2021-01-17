@@ -16,9 +16,33 @@ public class StringArrayGraphics implements Updatable {
     private final int priority = 10;
     private final boolean transparent = true;
     private final Canvas canvas;
-    private final DiscreteCoordinates coordinates;
-    private final Color color;
+    private DiscreteCoordinates coordinates;
+    private Color color;
     private final char[][] array;
+
+    public void setXCentered() {
+        coordinates = new DiscreteCoordinates((canvas.getWidth() / 2) - (array[getMaxIndex()].length / 2), coordinates.y);
+    }
+
+    public void setYCentered() {
+        coordinates = new DiscreteCoordinates(coordinates.x, (canvas.getHeight() / 2) - (array.length / 2));
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    private int getMaxIndex() {
+        int maxIndex = 0;
+        int maxLength = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].length > maxLength) {
+                maxLength = array[i].length;
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
 
     public StringArrayGraphics(Canvas canvas, DiscreteCoordinates coordinates, String[] array) {
         this(canvas, coordinates, array, null);

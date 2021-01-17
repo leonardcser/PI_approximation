@@ -53,10 +53,10 @@ public class Xterm {
     }
 
 	public static String get24BitFgColor(int r, int g, int b) {
-		return String.format("\033[38;2;%d;%d;%d", r, g, b);
+		return String.format("\033[38;2;%d;%d;%dm", r, g, b);
     }
     
     public static String get24BitBgColor(int r, int g, int b) {
-		return String.format("\033[48;2;%d;%d;%d", r, g, b);
+		return String.format("\033[48;2;%d;%d;%dm", r, g, b);
 	}
 }

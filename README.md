@@ -95,12 +95,12 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 Check out the code for theses examples here: [jTengineDemo](https://github.com/leonardcser/jtenginedemo).
 
 ### Visualiser App
-![menuAlgorithms](res/demo/menuAlgorithms.png)
-![quickSort](res/demo/quickSort.png)
-![maze](res/demo/maze.png)
+![menuAlgorithms](res/demo/bubbleSort.gif)
+![quickSort](res/demo/quickSort.gif)
+![maze](res/demo/mazeGeneration.gif)
 
 ### Snake Game
-![snake](res/demo/snake.png)
+![snake](res/demo/snakeGame.gif)
 
 
 <a name="contribution"></a>
