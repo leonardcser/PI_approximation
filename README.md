@@ -50,7 +50,7 @@ The main goal of this library is to create a easy and fun way to learn to code i
 <a name="cells-vs-pixels"></a>
 ## Cells vs Pixels
 A Cell is the outerclass of a Pixel. It contains a x and y position on the Canvas, a Pixel instance and a priority (use for drawing).  
-A Pixel contains a char, a background color and a forground color. Using half block chars, it allow to draw perfectly square pixels on the Canvas. ('▀' and '▄' instead of '█')
+A Pixel contains a char, a background color and a forground color. Using half block chars, it allow to draw perfectly square pixels on the Canvas. (`▀` and `▄` instead of `█`)
 
 
 In order to draw anything, cells or pixel must be requested from Canvas.java
@@ -76,6 +76,7 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 <pre>
 .
 └── 📦 src/
+    ├── App.java (main class)
     └── 📦 "yourapplication"/
         ├── "YourApplication.java" ............ overrides Application.java
         └── 📦 states/
@@ -83,8 +84,7 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
             └── "YourState.java" .............. overrides "YourApplicationState.java"
 </pre>
 
-6. Add a new instance of the Application in [Loop.java](src/com/leo/jtengine/Loop.java) main method
-
+6. Create App.java and add a new instance of the Application in it
 
 <a name="demo"></a>
 ## Demos
