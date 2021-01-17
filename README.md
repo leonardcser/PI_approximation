@@ -16,7 +16,8 @@
 
 <a name="goal"></a>
 ## Goal
-The main goal of this library is to create a easy and fun way to learn to code in Java. Concepts vary from package managment, to game structure, events and algorithms.
+The main goal of this library is to create a easy and fun way to learn to code in Java. Concepts vary from package managment, to game structure, events and algorithms.  
+My idea is to create a youtube playlist explaining these concepts while creating an application or game.
 
 
 <a name="features"></a>
@@ -66,8 +67,8 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 ```
 
 ### Steps
-1. Create new package in /application
-2. Create new class overriding Application.java
+1. Create new package in /src
+2. Create new class overriding Application.java in this new package
 3. Create new "states" package in this new package
 4. Create new abstract class in "states" package overriding State.java
 5. Create a class for each state of the application in "states" package overriding "YourApplicationState".java (abstract class)
