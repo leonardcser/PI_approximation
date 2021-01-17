@@ -44,14 +44,27 @@ The main goal of this library is to create a easy and fun way to learn to code i
 ...
 
 <a name="cells-vs-pixels"></a>
+
 ## Cells vs Pixels
 A Cell is the outerclass of a Pixel. It contains a x and y position on the Canvas, a Pixel instance and a priority (use for drawing).  
-A Pixel contains a char, a background color and a forground color. Using half block chars, it allow to draw perfectly square pixels on the Canvas.
+A Pixel contains a char, a background color and a forground color. Using half block chars, it allow to draw perfectly square pixels on the Canvas. ('▀' and '▄' instead of '█')
+
 
 In order to draw anything, cells or pixel must be requested from Canvas.java
 
 <a name="how-to-use"></a>
+
 ## How to use (in current state)
+### Note
+I am currently woking on this project, so no JAR version is avaible for the moment.  
+However, you can stay up to date by making this repo as starred and when I will release the first version, this page will be updated. Check below for any questions.
+
+### Preliminaries
+1. Download this repo
+2. Compile to JAR file
+3. Create new project including the compiled JAR file
+
+### Steps
 1. Create new package in /application
 2. Create new class overriding Application.java
 3. Create new "states" package in this new package
@@ -61,19 +74,19 @@ In order to draw anything, cells or pixel must be requested from Canvas.java
 #### This is an example of how the file tree would look like:
 <pre>
 .
-└── 📦 src/com/leo/application
-    └── 📦 "yourapplication"
+└── 📦 src/
+    └── 📦 "yourapplication"/
         ├── "YourApplication.java" ............ overrides Application.java
-        └── 📦 states
+        └── 📦 states/
             ├── "YourApplicationState.java" ... overrides State.java
             └── "YourState.java" .............. overrides "YourApplicationState.java"
 </pre>
 
-6. Add a new instance of the Application in [Loop.java](src/com/leo/application/Loop.java) main method
+6. Add a new instance of the Application in [Loop.java](src/com/leo/jtengine/Loop.java) main method
 
 <a name="demo"></a>
 ## Demos
-Check out [jTengine Demo](https://github.com/leonardcser/jtenginedemo) repo.
+Check out examples at [jTengine Demo](https://github.com/leonardcser/jtenginedemo) repo.
 
 
 <a name="contribution"></a>
