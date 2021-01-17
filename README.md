@@ -1,4 +1,6 @@
-# jTengine - Project work in progress... 
+<img src="res/jTengineLogo.png" alt="C++ Logo" width="514" height="114" />
+
+## Project work in progress... 
 > **Current state:** early development, functional
 
 ## Contents
