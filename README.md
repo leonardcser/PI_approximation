@@ -90,18 +90,9 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 
 6. Create App.java and add a new instance of the Application in it
 
-<a name="demo"></a>
+<a name="demos"></a>
 ## Demos
 Check out the code for theses examples here: [jTengineDemo](https://github.com/leonardcser/jtenginedemo).
-
-### Visualiser App
-![menuAlgorithms](res/demo/bubbleSort.gif)
-![quickSort](res/demo/quickSort.gif)
-![maze](res/demo/mazeGeneration.gif)
-
-### Snake Game
-![snake](res/demo/snakeGame.gif)
-
 
 <a name="contribution"></a>
 ## Contribution
