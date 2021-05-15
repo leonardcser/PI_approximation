@@ -11,7 +11,6 @@
 4. [Cells vs Pixels](#cells-vs-pixels)
 5. [How to use (in current state)](#how-to-use)
 6. [Demos](#demos)
-7. [Contribution](#contribution)
 
 
 <a name="goal"></a>
@@ -93,7 +92,3 @@ curl -o jTengine.jar https://github.com/leonardcser/jtengine/raw/main/out/produc
 <a name="demos"></a>
 ## Demos
 Check out the code for theses examples here: [jTengineDemo](https://github.com/leonardcser/jtenginedemo).
-
-<a name="contribution"></a>
-## Contribution
-Feel free to contact me: leocser632@gmail.com as well as suggesting ideas or features :)
